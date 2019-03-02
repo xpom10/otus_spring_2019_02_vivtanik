@@ -14,8 +14,4 @@ public class ScannerUtil {
         return scanner.nextInt();
     }
 
-    public static void closeScanner() {
-        scanner.close();
-    }
-
 }

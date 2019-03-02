@@ -11,6 +11,5 @@ public interface AnswerService {
 
     List<CsvQuestionEntity> getCsvLines();
 
-    void showResults(User user);
 
 }
