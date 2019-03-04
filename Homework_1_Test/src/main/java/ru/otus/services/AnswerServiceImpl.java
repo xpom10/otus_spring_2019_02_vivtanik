@@ -14,6 +14,11 @@ import java.util.Objects;
 
 public class AnswerServiceImpl implements AnswerService {
 
+    private String filename;
+
+    public AnswerServiceImpl(String filename) {
+        this.filename = filename;
+    }
 
     @Override
     public boolean checkAnswer(int expectedAnswer, int actualAnswer) {
@@ -24,7 +29,7 @@ public class AnswerServiceImpl implements AnswerService {
     @SuppressWarnings("unchecked")
     public List<CsvQuestionEntity> getCsvLines() {
         try {
-            URI fileUri = Objects.requireNonNull(getClass().getClassLoader().getResource("csv/Questions.csv"),
+            URI fileUri = Objects.requireNonNull(getClass().getClassLoader().getResource(String.format("csv/%s", filename)),
             "Файл не найден").toURI();
             Path path = Paths.get(fileUri).toAbsolutePath();
             return new CsvToBeanBuilder(readCsv(path)).withSeparator(';')

@@ -7,7 +7,9 @@
 
     <bean id="registerService" class="ru.otus.services.RegisterServiceImpl"/>
 
-    <bean id="answerService" class="ru.otus.services.AnswerServiceImpl"/>
+    <bean id="answerService" class="ru.otus.services.AnswerServiceImpl">
+        <constructor-arg name="filename" value="Questions.csv"/>
+    </bean>
 
     <bean id="resultService" class="ru.otus.services.ResultServiceImpl"/>
 
