@@ -14,7 +14,7 @@ import ru.otus.services.*;
 @PropertySource("classpath:application.properties")
 public class Config {
 
-    @Bean()
+    @Bean
     public AnswerService answerService(@Value("${csv.filename}") String filename) {
         return new AnswerServiceImpl(filename);
     }
