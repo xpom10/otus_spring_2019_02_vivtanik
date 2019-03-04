@@ -5,6 +5,17 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-    <bean></bean>
+    <bean id="registerService" class="ru.otus.services.RegisterServiceImpl"/>
+
+    <bean id="answerService" class="ru.otus.services.AnswerServiceImpl"/>
+
+    <bean id="resultService" class="ru.otus.services.ResultServiceImpl"/>
+
+    <bean id="runner" class="ru.otus.runner.TestRunnerServiceImpl">
+        <constructor-arg name="register" ref="registerService"/>
+        <constructor-arg name="answer" ref="answerService"/>
+        <constructor-arg name="result" ref="resultService"/>
+    </bean>
+
 
 </beans>
