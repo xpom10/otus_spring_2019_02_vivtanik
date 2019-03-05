@@ -1,28 +1,31 @@
 package ru.otus.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.model.User;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Locale;
 
 @Service
 public class ResultServiceImpl implements ResultService {
 
-    private Map<Integer, String> resultMessages = new HashMap<>();
+    private MessageSource messageSource;
+    private Locale locale;
 
-    public ResultServiceImpl() {
-        resultMessages.put(0, "Ни одного верного ответа, надо еще немного потренироваться");
-        resultMessages.put(1, "Один правильный ответ, надо еще немного потренироваться");
-        resultMessages.put(2, "Эх... двоечка, надо еще немного потренироваться");
-        resultMessages.put(3, "Неплохо, ты явно интересуешься футболом");
-        resultMessages.put(4, "Ты молодец, всего один промах");
-        resultMessages.put(5, "5 из 5! Ты молодец");
+    @Autowired
+    public ResultServiceImpl(MessageSource messageSource, Locale locale) {
+        this.messageSource = messageSource;
+        this.locale = locale;
     }
 
     @Override
     public void showResults(User user) {
-        String message = resultMessages.getOrDefault(user.getCountRightAnswers(), "Не найдено столько ответов");
+        String message = messageSource.getMessage(
+                "result.message",
+                new Object[]{user.getName(), user.getFamily(), user.getCountRightAnswers()},
+                locale
+        );
         System.out.println(message);
     }
 }

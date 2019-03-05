@@ -10,14 +10,17 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class AnswerServiceImpl implements AnswerService {
 
     private String filename;
+    private Locale locale;
 
-    public AnswerServiceImpl(String filename) {
+    public AnswerServiceImpl(String filename, Locale locale) {
         this.filename = filename;
+        this.locale = locale;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class AnswerServiceImpl implements AnswerService {
     @SuppressWarnings("unchecked")
     public List<CsvQuestionEntity> getCsvLines() {
         try {
-            URI fileUri = Objects.requireNonNull(getClass().getClassLoader().getResource(String.format("csv/%s", filename)),
+            URI fileUri = Objects.requireNonNull(getClass().getClassLoader().getResource(String.format("csv/%s/%s", locale.getLanguage(),filename)),
             "Файл не найден").toURI();
             Path path = Paths.get(fileUri).toAbsolutePath();
             return new CsvToBeanBuilder(readCsv(path)).withSeparator(';')

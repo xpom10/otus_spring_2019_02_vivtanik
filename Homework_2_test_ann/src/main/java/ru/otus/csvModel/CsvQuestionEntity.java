@@ -19,10 +19,8 @@ public class CsvQuestionEntity {
     @CsvBindByName(column = "RightAnswer")
     private int rightAnswer;
 
-
-
     public String getAnswers() {
-        return String.format("1. %s; 2. %s; 3. %s;", answer1, answer2, answer3);
+        return String.format("1. %s;\n2. %s;\n3. %s;", answer1, answer2, answer3);
     }
 
     public int getRightAnswer() {

@@ -1,6 +1,7 @@
 package ru.otus.runner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import ru.otus.csvModel.CsvQuestionEntity;
 import ru.otus.model.User;
 import ru.otus.services.AnswerService;
@@ -9,20 +10,25 @@ import ru.otus.services.ResultService;
 import ru.otus.util.ScannerUtil;
 
 import java.util.List;
+import java.util.Locale;
 
 public class TestRunnerServiceImpl implements TestRunnerService {
 
     private RegisterService registerService;
     private AnswerService answerService;
     private ResultService resultService;
+    private MessageSource messageSource;
+    private Locale locale;
 
     private User user;
 
-@Autowired
-    public TestRunnerServiceImpl(RegisterService register, AnswerService answer, ResultService result) {
+    @Autowired
+    public TestRunnerServiceImpl(RegisterService register, AnswerService answer, ResultService result, MessageSource messageSource, Locale locale) {
         this.registerService = register;
         this.answerService = answer;
         this.resultService = result;
+        this.messageSource = messageSource;
+        this.locale = locale;
     }
 
     @Override
@@ -49,9 +55,9 @@ public class TestRunnerServiceImpl implements TestRunnerService {
     }
 
     private void registerUser() {
-        System.out.println("Введите Ваше имя:");
+        System.out.println(messageSource.getMessage("enter.name", null, locale));
         String name = ScannerUtil.enterString();
-        System.out.println("Введите вашу фамилию:");
+        System.out.println(messageSource.getMessage("enter.family", null, locale));
         String family = ScannerUtil.enterString();
 
         user = registerService.registerUser(name, family);
