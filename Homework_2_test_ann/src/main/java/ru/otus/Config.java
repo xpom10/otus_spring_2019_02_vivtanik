@@ -7,8 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import ru.otus.messageSystem.MessageImpl;
-import ru.otus.messageSystem.MessageSystem;
+import ru.otus.messageService.MessageService;
+import ru.otus.messageService.MessageServiceImpl;
 import ru.otus.runner.TestRunnerService;
 import ru.otus.runner.TestRunnerServiceImpl;
 import ru.otus.services.AnswerService;
@@ -22,13 +22,13 @@ import ru.otus.services.ResultService;
 public class Config {
 
     @Bean
-    public AnswerService answerService(@Value("${csv.filename}") String filename, MessageSystem messageSystem) {
-        return new AnswerServiceImpl(filename, messageSystem);
+    public AnswerService answerService(@Value("${csv.filename}") String filename, MessageService messageService) {
+        return new AnswerServiceImpl(filename, messageService);
     }
 
     @Bean
-    public MessageSystem messageSystem(MessageSource messageSource, @Value("${locale}") String locale) {
-        return new MessageImpl(messageSource, locale);
+    public MessageService messageSystem(MessageSource messageSource, @Value("${locale}") String locale) {
+        return new MessageServiceImpl(messageSource, locale);
     }
 
     @Bean
@@ -40,8 +40,8 @@ public class Config {
     }
 
     @Bean
-    public TestRunnerService testRunnerService(RegisterService register, AnswerService answer, ResultService result, MessageSystem messageSystem) {
-        return new TestRunnerServiceImpl(register, answer, result, messageSystem);
+    public TestRunnerService testRunnerService(RegisterService register, AnswerService answer, ResultService result, MessageService messageService) {
+        return new TestRunnerServiceImpl(register, answer, result, messageService);
     }
 
 }

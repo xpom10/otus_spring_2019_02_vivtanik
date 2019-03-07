@@ -2,7 +2,7 @@ package ru.otus.runner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.otus.csvModel.CsvQuestionEntity;
-import ru.otus.messageSystem.MessageSystem;
+import ru.otus.messageService.MessageService;
 import ru.otus.model.User;
 import ru.otus.services.AnswerService;
 import ru.otus.services.RegisterService;
@@ -16,16 +16,16 @@ public class TestRunnerServiceImpl implements TestRunnerService {
     private RegisterService registerService;
     private AnswerService answerService;
     private ResultService resultService;
-    private MessageSystem messageSystem;
+    private MessageService messageService;
 
     private User user;
 
     @Autowired
-    public TestRunnerServiceImpl(RegisterService register, AnswerService answer, ResultService result, MessageSystem messageSystem) {
+    public TestRunnerServiceImpl(RegisterService register, AnswerService answer, ResultService result, MessageService messageService) {
         this.registerService = register;
         this.answerService = answer;
         this.resultService = result;
-        this.messageSystem = messageSystem;
+        this.messageService = messageService;
     }
 
     @Override
@@ -52,9 +52,9 @@ public class TestRunnerServiceImpl implements TestRunnerService {
     }
 
     private void registerUser() {
-        System.out.println(messageSystem.getMessage("enter.name", null));
+        System.out.println(messageService.getMessage("enter.name"));
         String name = ScannerUtil.enterString();
-        System.out.println(messageSystem.getMessage("enter.family", null));
+        System.out.println(messageService.getMessage("enter.family"));
         String family = ScannerUtil.enterString();
 
         user = registerService.registerUser(name, family);

@@ -2,7 +2,7 @@ package ru.otus.services;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import ru.otus.csvModel.CsvQuestionEntity;
-import ru.otus.messageSystem.MessageSystem;
+import ru.otus.messageService.MessageService;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,11 +16,11 @@ import java.util.Objects;
 public class AnswerServiceImpl implements AnswerService {
 
     private String filename;
-    private MessageSystem messageSystem;
+    private MessageService messageService;
 
-    public AnswerServiceImpl(String filename, MessageSystem messageSystem) {
+    public AnswerServiceImpl(String filename, MessageService messageService) {
         this.filename = filename;
-        this.messageSystem = messageSystem;
+        this.messageService = messageService;
     }
 
     @Override
@@ -32,15 +32,15 @@ public class AnswerServiceImpl implements AnswerService {
     @SuppressWarnings("unchecked")
     public List<CsvQuestionEntity> getCsvLines() {
         try {
-            String resourcePath = String.format("csv/%s/%s", messageSystem.getLocale().getLanguage(), filename);
+            String resourcePath = String.format("csv/%s/%s", messageService.getLocale().getLanguage(), filename);
             URI fileUri = Objects.requireNonNull(getClass().getClassLoader()
                             .getResource(resourcePath),
-                    messageSystem.getMessage("file.not.found", new Object[]{resourcePath})).toURI();
+                    messageService.getMessage("file.not.found", new Object[]{resourcePath})).toURI();
             Path path = Paths.get(fileUri).toAbsolutePath();
             return new CsvToBeanBuilder(readCsv(path)).withSeparator(';')
                     .withType(CsvQuestionEntity.class).build().parse();
         } catch (URISyntaxException e) {
-            throw new RuntimeException(messageSystem.getMessage("syntax.err", null), e);
+            throw new RuntimeException(messageService.getMessage("syntax.err"), e);
         }
     }
 
@@ -48,7 +48,7 @@ public class AnswerServiceImpl implements AnswerService {
         try {
             return new FileReader(path.toFile());
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(messageSystem.getMessage("file.not.found", new Object[]{path.toString()}), e);
+            throw new RuntimeException(messageService.getMessage("file.not.found", new Object[]{path.toString()}), e);
         }
     }
 }

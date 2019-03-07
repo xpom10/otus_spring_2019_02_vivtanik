@@ -1,15 +1,15 @@
-package ru.otus.messageSystem;
+package ru.otus.messageService;
 
 import org.springframework.context.MessageSource;
 
 import java.util.Locale;
 
-public class MessageImpl implements MessageSystem {
+public class MessageServiceImpl implements MessageService {
 
     private MessageSource messageSource;
     private String locale;
 
-    public MessageImpl(MessageSource messageSource, String locale) {
+    public MessageServiceImpl(MessageSource messageSource, String locale) {
         this.messageSource = messageSource;
         this.locale = locale;
     }
@@ -17,6 +17,11 @@ public class MessageImpl implements MessageSystem {
     @Override
     public String getMessage(String code, Object[] args) {
         return messageSource.getMessage(code, args, getLocale());
+    }
+
+    @Override
+    public String getMessage(String code) {
+        return getMessage(code, null);
     }
 
     @Override
