@@ -6,9 +6,18 @@ public class Book {
 
     private String title;
 
-    private BookAuthor bookAuthor;
+    private int authorId;
 
-    private BookGenre bookGenre;
+    private int genreId;
+
+    public Book() {
+    }
+
+    public Book(String title, int authorId, int genreId) {
+        this.title = title;
+        this.authorId = authorId;
+        this.genreId = genreId;
+    }
 
     public int getId() {
         return id;
@@ -26,19 +35,19 @@ public class Book {
         this.title = title;
     }
 
-    public BookAuthor getBookAuthor() {
-        return bookAuthor;
+    public int getBookAuthor() {
+        return authorId;
     }
 
-    public void setBookAuthor(BookAuthor bookAuthor) {
-        this.bookAuthor = bookAuthor;
+    public void setBookAuthor(int bookAuthor) {
+        this.authorId = bookAuthor;
     }
 
-    public BookGenre getBookGenre() {
-        return bookGenre;
+    public int getBookGenre() {
+        return genreId;
     }
 
-    public void setBookGenre(BookGenre bookGenre) {
-        this.bookGenre = bookGenre;
+    public void setBookGenre(int bookGenre) {
+        this.genreId = bookGenre;
     }
 }
