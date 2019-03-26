@@ -20,6 +20,11 @@ public class BookDaoImpl implements BookDao {
 
     private final NamedParameterJdbcOperations jdbc;
 
+    private final static String SELECT_QUERY =
+            "select id, title, b.genre_id, b.author_id, g.genre_name, a.author_name from books b " +
+            "join author a on a.AUTHOR_ID = b.author_id " +
+            "join genre g on g.GENRE_ID = b.genre_id ";
+
     private static RowMapper<Book> rowMapper = (resultSet, i) -> {
         long id = resultSet.getLong("id");
         String title = resultSet.getString("title");
@@ -49,10 +54,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Book getBookById(int id) {
         try {
-            return jdbc.queryForObject("select id, title, b.genre_id, b.author_id, g.genre_name, a.author_name from books b " +
-                            "join author a on a.AUTHOR_ID = b.author_id " +
-                            "join genre g on g.GENRE_ID = b.genre_id " +
-                            "where id = :id",
+            return jdbc.queryForObject(SELECT_QUERY + "where id = :id",
                     new MapSqlParameterSource().addValue("id", id),
                     rowMapper);
         } catch (EmptyResultDataAccessException e) {
@@ -62,19 +64,13 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public List<Book> getBooks() {
-        return jdbc.query("select id, title, b.genre_id, b.author_id, g.genre_name, a.author_name from books b " +
-                        "join author a on a.AUTHOR_ID = b.author_id " +
-                        "join genre g on g.GENRE_ID = b.genre_id ",
-                rowMapper);
+        return jdbc.query(SELECT_QUERY, rowMapper);
     }
 
     @Override
     public Book getBookByTitle(String title) {
         try {
-            return jdbc.queryForObject("select id, title, b.genre_id, b.author_id, g.genre_name, a.author_name from books b " +
-                            "join author a on a.AUTHOR_ID = b.author_id " +
-                            "join genre g on g.GENRE_ID = b.genre_id " +
-                            "where title = :title",
+            return jdbc.queryForObject(SELECT_QUERY + "where title = :title",
                     new MapSqlParameterSource().addValue("title", title),
                     rowMapper);
         } catch (EmptyResultDataAccessException e) {
