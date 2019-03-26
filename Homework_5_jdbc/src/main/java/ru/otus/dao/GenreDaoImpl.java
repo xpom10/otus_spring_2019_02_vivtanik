@@ -3,6 +3,7 @@ package ru.otus.dao;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -15,7 +16,7 @@ import java.util.Objects;
 @Repository
 public class GenreDaoImpl implements GenreDao {
 
-    private final NamedParameterJdbcTemplate jdbc;
+    private final NamedParameterJdbcOperations jdbc;
 
     private final static RowMapper<BookGenre> rowMapper = (resultSet, i) -> {
         BookGenre genre = new BookGenre();

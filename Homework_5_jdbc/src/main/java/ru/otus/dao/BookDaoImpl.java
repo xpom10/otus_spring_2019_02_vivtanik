@@ -9,8 +9,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.domain.Book;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,7 +70,8 @@ public class BookDaoImpl implements BookDao {
                 new MapSqlParameterSource()
                         .addValue("title", book.getTitle())
                         .addValue("genre_id", book.getBookGenre())
-                        .addValue("author_id", book.getBookAuthor()), keyHolder);
+                        .addValue("author_id", book.getBookAuthor()),
+                keyHolder);
         return keyHolder.getKey().intValue();
     }
 
