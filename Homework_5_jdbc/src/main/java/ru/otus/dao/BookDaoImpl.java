@@ -22,8 +22,8 @@ public class BookDaoImpl implements BookDao {
         Book book = new Book();
         book.setId(resultSet.getInt("id"));
         book.setTitle(resultSet.getString("title"));
-        book.setBookGenre(resultSet.getInt("genre_id"));
-        book.setBookGenre(resultSet.getInt("author_id"));
+        book.setBookGenreId(resultSet.getInt("genre_id"));
+        book.setBookAuthorId(resultSet.getInt("author_id"));
         return book;
     };
 
@@ -69,19 +69,16 @@ public class BookDaoImpl implements BookDao {
         jdbc.update("insert into books (title, genre_id, author_id) values(:title, :genre_id, :author_id)",
                 new MapSqlParameterSource()
                         .addValue("title", book.getTitle())
-                        .addValue("genre_id", book.getBookGenre())
-                        .addValue("author_id", book.getBookAuthor()),
+                        .addValue("genre_id", book.getBookGenreId())
+                        .addValue("author_id", book.getBookAuthorId()),
                 keyHolder);
         return keyHolder.getKey().intValue();
     }
 
     @Override
     public int deleteBookById(int id) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update("delete from books where id = :id",
-                new MapSqlParameterSource().addValue("id", id),
-                keyHolder);
-        return keyHolder.getKey().intValue();
+        return jdbc.update("delete from books where id = :id",
+                new MapSqlParameterSource().addValue("id", id));
     }
 
 

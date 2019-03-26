@@ -59,20 +59,17 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public int createAuthor(BookAuthor author) {
+    public int createAuthor(String author) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update("insert into author (author_name) values (:name)",
-                new MapSqlParameterSource().addValue("name", author.getAuthorName()),
+                new MapSqlParameterSource().addValue("name", author),
                 keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
     @Override
     public int deleteAuthor(int id) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update("delete from author where author_id = :id",
-                new MapSqlParameterSource().addValue("id", id),
-                keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).intValue();
+        return jdbc.update("delete from author where author_id = :id",
+                new MapSqlParameterSource().addValue("id", id));
     }
 }

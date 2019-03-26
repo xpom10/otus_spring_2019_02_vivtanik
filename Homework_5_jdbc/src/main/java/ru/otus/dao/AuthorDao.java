@@ -12,7 +12,7 @@ public interface AuthorDao {
 
     BookAuthor getAuthorByName(String name);
 
-    int createAuthor(BookAuthor author);
+    int createAuthor(String author);
 
     int deleteAuthor(int id);
 }

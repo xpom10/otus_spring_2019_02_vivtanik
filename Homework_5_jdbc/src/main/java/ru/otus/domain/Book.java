@@ -1,5 +1,7 @@
 package ru.otus.domain;
 
+import java.util.Objects;
+
 public class Book {
 
     private int id;
@@ -35,19 +37,45 @@ public class Book {
         this.title = title;
     }
 
-    public int getBookAuthor() {
+    public int getBookAuthorId() {
         return authorId;
     }
 
-    public void setBookAuthor(int bookAuthor) {
+    public void setBookAuthorId(int bookAuthor) {
         this.authorId = bookAuthor;
     }
 
-    public int getBookGenre() {
+    public int getBookGenreId() {
         return genreId;
     }
 
-    public void setBookGenre(int bookGenre) {
+    public void setBookGenreId(int bookGenre) {
         this.genreId = bookGenre;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return id == book.id &&
+                authorId == book.authorId &&
+                genreId == book.genreId &&
+                Objects.equals(title, book.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, authorId, genreId);
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", authorId=" + authorId +
+                ", genreId=" + genreId +
+                '}';
     }
 }
