@@ -80,7 +80,7 @@ public class ShellOperations {
             System.out.println(String.format("Author '%s' for new book '%s' not found, please create Author", author, title));
             return;
         }
-        Book bookForCreate = new Book(title, bookAuthor.getAuthorBookId(), bookGenre.getBookGenreId());
+        Book bookForCreate = new Book(title, bookAuthor, bookGenre);
         int id = bookDao.createBook(bookForCreate);
         System.out.println(String.format("Book created with id '%s'", id));
     }

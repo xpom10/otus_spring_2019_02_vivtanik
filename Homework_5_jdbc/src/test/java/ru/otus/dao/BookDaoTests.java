@@ -1,25 +1,23 @@
 package ru.otus.dao;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.shell.jline.InteractiveShellApplicationRunner;
-import org.springframework.shell.jline.ScriptShellApplicationRunner;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.otus.domain.Book;
+import ru.otus.domain.BookAuthor;
+import ru.otus.domain.BookGenre;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-@SpringBootTest(properties = {
-        "spring.datasource.initialization-mode=never",
-        InteractiveShellApplicationRunner.SPRING_SHELL_INTERACTIVE_ENABLED + "=false",
-        ScriptShellApplicationRunner.SPRING_SHELL_SCRIPT_ENABLED + "=false"
-})
+
+@JdbcTest
+@Import(BookDaoImpl.class)
 @Sql(scripts = {"classpath:schema.sql", "classpath:testData.sql"})
 @RunWith(SpringRunner.class)
 public class BookDaoTests {
@@ -31,8 +29,8 @@ public class BookDaoTests {
     public void testGetById() {
         Book book = bookDao.getBookById(1);
         assertEquals("Book1", book.getTitle());
-        assertEquals(1, book.getBookGenreId());
-        assertEquals(1, book.getBookAuthorId());
+        assertEquals(1, book.getGenre().getBookGenreId());
+        assertEquals(1, book.getAuthor().getAuthorBookId());
     }
 
     @Test
@@ -45,8 +43,8 @@ public class BookDaoTests {
     public void testGetByTitle() {
         Book book = bookDao.getBookByTitle("Book2");
         assertEquals(2, book.getId());
-        assertEquals(2, book.getBookGenreId());
-        assertEquals(2, book.getBookAuthorId());
+        assertEquals(2, book.getGenre().getBookGenreId());
+        assertEquals(2, book.getAuthor().getAuthorBookId());
     }
 
     @Test
@@ -70,7 +68,9 @@ public class BookDaoTests {
 
     @Test
     public void testCreateBook() {
-        Book expectedBook = new Book("Book4", 1, 2);
+        BookAuthor author = new BookAuthor(1, "Author1");
+        BookGenre genre = new BookGenre(1, "Genre1");
+        Book expectedBook = new Book("Book4", author, genre);
         int id = bookDao.createBook(expectedBook);
         expectedBook.setId(id);
         Book actualBook = bookDao.getBookById(id);

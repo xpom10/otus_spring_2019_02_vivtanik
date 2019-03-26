@@ -1,24 +1,16 @@
 package ru.otus.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookAuthor {
 
-    private int authorBookId;
+    private long authorBookId;
 
     private String authorName;
 
-    public int getAuthorBookId() {
-        return authorBookId;
-    }
-
-    public void setAuthorBookId(int authorBookId) {
-        this.authorBookId = authorBookId;
-    }
-
-    public String getAuthorName() {
-        return authorName;
-    }
-
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
 }
