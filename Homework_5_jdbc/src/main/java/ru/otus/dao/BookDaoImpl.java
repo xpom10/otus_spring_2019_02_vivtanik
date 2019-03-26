@@ -22,8 +22,8 @@ public class BookDaoImpl implements BookDao {
 
     private final static String SELECT_QUERY =
             "select id, title, b.genre_id, b.author_id, g.genre_name, a.author_name from books b " +
-            "join author a on a.AUTHOR_ID = b.author_id " +
-            "join genre g on g.GENRE_ID = b.genre_id ";
+            "inner join author a on a.AUTHOR_ID = b.author_id " +
+            "inner join genre g on g.GENRE_ID = b.genre_id ";
 
     private static RowMapper<Book> rowMapper = (resultSet, i) -> {
         long id = resultSet.getLong("id");
