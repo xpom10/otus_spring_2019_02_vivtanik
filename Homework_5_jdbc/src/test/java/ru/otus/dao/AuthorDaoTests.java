@@ -18,7 +18,6 @@ import static org.junit.Assert.*;
 
 @JdbcTest
 @Import(AuthorDaoImpl.class)
-@Sql(scripts = {"classpath:schema.sql", "classpath:testData.sql"})
 @RunWith(SpringRunner.class)
 public class AuthorDaoTests {
 

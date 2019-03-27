@@ -21,7 +21,6 @@ import static org.junit.Assert.assertNotNull;
 
 @JdbcTest
 @Import(GenreDaoImpl.class)
-@Sql(scripts = {"classpath:schema.sql", "classpath:testData.sql"})
 @RunWith(SpringRunner.class)
 public class GenreDaoTests {
     
