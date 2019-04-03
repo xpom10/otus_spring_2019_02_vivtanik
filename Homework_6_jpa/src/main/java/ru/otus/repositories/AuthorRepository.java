@@ -12,7 +12,7 @@ public interface AuthorRepository {
 
     BookAuthor getAuthorByName(String name);
 
-    long createAuthor(String author);
+    long createAuthor(BookAuthor author);
 
     long deleteAuthor(int id);
 }

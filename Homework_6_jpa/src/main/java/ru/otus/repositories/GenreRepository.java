@@ -12,5 +12,5 @@ public interface GenreRepository {
 
     BookGenre getGenreByName(String name);
 
-    long createGenre(String genre);
+    long createGenre(BookGenre genre);
 }

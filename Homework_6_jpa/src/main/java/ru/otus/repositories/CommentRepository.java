@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CommentRepository {
 
-    void createComment(Comment comment);
+    long createComment(Comment comment);
 
-    List<Comment> getAllCommentForBook(String bookId);
+    List<Comment> getAllCommentForBook(long bookId);
 }

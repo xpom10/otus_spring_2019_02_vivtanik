@@ -1,9 +1,14 @@
 package ru.otus.domain;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "comments")
+@Data
+@NoArgsConstructor
 public class Comment {
 
     @Id
@@ -18,4 +23,9 @@ public class Comment {
     @Column(name = "comment")
     private String comment;
 
+
+    public Comment(Book book, String comment) {
+        this.book = book;
+        this.comment = comment;
+    }
 }

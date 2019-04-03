@@ -47,9 +47,8 @@ public class GenreRepositoryJpa implements GenreRepository {
     }
 
     @Override
-    public long createGenre(String genre) {
-        BookGenre bookGenre = new BookGenre(genre);
-        em.persist(bookGenre);
-        return bookGenre.getBookGenreId();
+    public long createGenre(BookGenre genre) {
+        em.persist(genre);
+        return genre.getBookGenreId();
     }
 }

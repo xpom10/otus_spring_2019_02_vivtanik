@@ -47,10 +47,9 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     }
 
     @Override
-    public long createAuthor(String author) {
-        BookAuthor bookAuthor = new BookAuthor(author);
-        em.persist(bookAuthor);
-        return bookAuthor.getAuthorBookId();
+    public long createAuthor(BookAuthor author) {
+        em.persist(author);
+        return author.getAuthorBookId();
     }
 
     @Override
