@@ -1,0 +1,4 @@
+spring:
+  datasource:
+    data: testData.sql
+    driver-class-name: org.h2.Driver
