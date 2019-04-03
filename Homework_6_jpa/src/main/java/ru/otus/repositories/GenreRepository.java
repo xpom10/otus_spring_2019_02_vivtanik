@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GenreRepository {
 
-    BookGenre getGenreById(int id);
+    BookGenre getGenreById(long id);
 
     List<BookGenre> getGenres();
 

@@ -4,10 +4,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.BookAuthor;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 
 @Repository
@@ -54,8 +51,8 @@ public class AuthorRepositoryJpa implements AuthorRepository {
 
     @Override
     public long deleteAuthor(int id) {
-        TypedQuery<Long> query = em.createQuery("delete from BookAuthor a where author_id = :id", Long.class);
+        Query query = em.createQuery("delete from BookAuthor a where author_id = :id");
         query.setParameter("id", id);
-        return query.getSingleResult();
+        return query.executeUpdate();
     }
 }

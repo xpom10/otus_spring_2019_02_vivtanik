@@ -16,5 +16,5 @@ public interface BookRepository {
 
     long createBook(Book book);
 
-    long deleteBookById(int id);
+    long deleteBookById(long id);
 }
