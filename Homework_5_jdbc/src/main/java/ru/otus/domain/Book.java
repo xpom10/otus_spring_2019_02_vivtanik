@@ -1,44 +1,25 @@
 package ru.otus.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
 
-    private int id;
+    private long id;
 
     private String title;
 
-    private BookAuthor bookAuthor;
+    private BookAuthor author;
 
-    private BookGenre bookGenre;
+    private BookGenre genre;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
+    public Book(String title, BookAuthor author, BookGenre genre) {
         this.title = title;
-    }
-
-    public BookAuthor getBookAuthor() {
-        return bookAuthor;
-    }
-
-    public void setBookAuthor(BookAuthor bookAuthor) {
-        this.bookAuthor = bookAuthor;
-    }
-
-    public BookGenre getBookGenre() {
-        return bookGenre;
-    }
-
-    public void setBookGenre(BookGenre bookGenre) {
-        this.bookGenre = bookGenre;
+        this.author = author;
+        this.genre = genre;
     }
 }

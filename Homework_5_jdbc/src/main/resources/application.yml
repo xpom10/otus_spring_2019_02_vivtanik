@@ -1,6 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/library
-    username: xpom10
-    password: Passw0rd
-    driver-class-name: com.mysql.jdbc.Driver
+  h2:
+    console:
+      enabled: true
