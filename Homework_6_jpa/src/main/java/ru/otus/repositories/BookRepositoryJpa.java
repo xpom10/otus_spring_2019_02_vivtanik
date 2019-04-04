@@ -14,6 +14,10 @@ public class BookRepositoryJpa implements BookRepository {
     @PersistenceContext
     private EntityManager em;
 
+    private static String SELECT_QUERY = "select b from Book b " +
+            "join fetch b.author a " +
+            "join fetch b.genre g ";
+
     @Override
     public long count() {
         TypedQuery<Long> query = em.createQuery("select count(b) from Book b", Long.class);
@@ -23,10 +27,7 @@ public class BookRepositoryJpa implements BookRepository {
     @Override
     public Book getBookById(long id) {
         try {
-            TypedQuery<Book> query = em.createQuery("select b from Book b " +
-                    "join fetch b.author a " +
-                    "join fetch b.genre g " +
-                    "where b.id = :id", Book.class);
+            TypedQuery<Book> query = em.createQuery(SELECT_QUERY + "where b.id = :id", Book.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -36,14 +37,14 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public List<Book> getBooks() {
-        TypedQuery<Book> query = em.createQuery("select b from Book b", Book.class);
+        TypedQuery<Book> query = em.createQuery(SELECT_QUERY, Book.class);
         return query.getResultList();
     }
 
     @Override
     public Book getBookByTitle(String title) {
         try {
-            TypedQuery<Book> query = em.createQuery("select b from Book b where b.title = :title", Book.class);
+            TypedQuery<Book> query = em.createQuery(SELECT_QUERY + "where b.title = :title", Book.class);
             query.setParameter("title", title);
             return query.getSingleResult();
         } catch (NoResultException e) {
