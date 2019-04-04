@@ -22,8 +22,8 @@ insert into BOOKS
 values (3, 'Book3', 2, 2);
 
 insert into COMMENTS
-values (1, 'Comment1', 1);
+values (1, 1, 'Comment1');
 insert into COMMENTS
-values (2, 'Comment2', 2);
+values (2, 2, 'Comment2');
 insert into COMMENTS
-values (3, 'Comment3', 2);
+values (3, 2, 'Comment3');

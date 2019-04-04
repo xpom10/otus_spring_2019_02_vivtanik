@@ -116,7 +116,7 @@ public class ShellOperations {
     }
 
     @ShellMethod("Delete author")
-    public void deleteAuthor(@ShellOption int id) {
+    public void deleteAuthor(@ShellOption long id) {
         authorRepository.deleteAuthor(id);
         System.out.println(String.format("Author delete with id '%s'", id));
     }
@@ -127,7 +127,7 @@ public class ShellOperations {
         if (author == null) {
             System.out.println(String.format("Author with name '%s' not found", name));
         } else {
-            System.out.println(String.format("Author name '%s'", author.getAuthorBookId()));
+            System.out.println(String.format("Author name '%s'", author.getAuthorName()));
         }
     }
 

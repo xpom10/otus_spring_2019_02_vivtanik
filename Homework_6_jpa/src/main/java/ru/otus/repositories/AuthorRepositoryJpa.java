@@ -9,15 +9,16 @@ import java.util.List;
 
 @Repository
 @Transactional
+@SuppressWarnings("JpaQlInspection")
 public class AuthorRepositoryJpa implements AuthorRepository {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public BookAuthor getAuthorById(int id) {
+    public BookAuthor getAuthorById(long id) {
         try {
-            TypedQuery<BookAuthor> query = em.createQuery("select a from BookAuthor a where author_id = :id", BookAuthor.class);
+            TypedQuery<BookAuthor> query = em.createQuery("select a from BookAuthor a where a.authorBookId = :id", BookAuthor.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -34,7 +35,7 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     @Override
     public BookAuthor getAuthorByName(String name) {
         try {
-            TypedQuery<BookAuthor> query = em.createQuery("select a from BookAuthor a where author_name = :name", BookAuthor.class);
+            TypedQuery<BookAuthor> query = em.createQuery("select a from BookAuthor a where a.authorName = :name", BookAuthor.class);
             query.setParameter("name", name);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -49,8 +50,8 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     }
 
     @Override
-    public long deleteAuthor(int id) {
-        Query query = em.createQuery("delete from BookAuthor a where author_id = :id");
+    public long deleteAuthor(long id) {
+        Query query = em.createQuery("delete from BookAuthor a where a.authorBookId = :id");
         query.setParameter("id", id);
         return query.executeUpdate();
     }

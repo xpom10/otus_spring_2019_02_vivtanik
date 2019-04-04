@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AuthorRepository {
 
-    BookAuthor getAuthorById(int id);
+    BookAuthor getAuthorById(long id);
 
     List<BookAuthor> getAuthors();
 
@@ -14,5 +14,5 @@ public interface AuthorRepository {
 
     long createAuthor(BookAuthor author);
 
-    long deleteAuthor(int id);
+    long deleteAuthor(long id);
 }

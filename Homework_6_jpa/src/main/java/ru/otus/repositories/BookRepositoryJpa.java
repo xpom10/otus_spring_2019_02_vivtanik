@@ -43,7 +43,7 @@ public class BookRepositoryJpa implements BookRepository {
     @Override
     public Book getBookByTitle(String title) {
         try {
-            TypedQuery<Book> query = em.createQuery("select b from Book b where title = :title", Book.class);
+            TypedQuery<Book> query = em.createQuery("select b from Book b where b.title = :title", Book.class);
             query.setParameter("title", title);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -59,7 +59,7 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public long deleteBookById(long id) {
-        Query query = em.createQuery("delete from Book b where id = :id");
+        Query query = em.createQuery("delete from Book b where b.id = :id");
         query.setParameter("id", id);
         return query.executeUpdate();
     }
