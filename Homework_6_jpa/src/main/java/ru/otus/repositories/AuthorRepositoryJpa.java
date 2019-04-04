@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 @Transactional
-@SuppressWarnings("JpaQlInspection")
 public class AuthorRepositoryJpa implements AuthorRepository {
 
     @PersistenceContext

@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 @Transactional
-@SuppressWarnings("JpaQlInspection")
 public class BookRepositoryJpa implements BookRepository {
 
     @PersistenceContext
@@ -24,7 +23,10 @@ public class BookRepositoryJpa implements BookRepository {
     @Override
     public Book getBookById(long id) {
         try {
-            TypedQuery<Book> query = em.createQuery("select b from Book b where id = :id", Book.class);
+            TypedQuery<Book> query = em.createQuery("select b from Book b " +
+                    "join fetch b.author a " +
+                    "join fetch b.genre g " +
+                    "where b.id = :id", Book.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {

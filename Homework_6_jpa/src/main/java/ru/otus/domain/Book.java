@@ -21,23 +21,13 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "author_id")
     private BookAuthor author;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "genre_id")
     private BookGenre genre;
-
-    @OneToMany(mappedBy = "book")
-    private List<Comment> bookComments;
-
-    public Book(long id, String title, BookAuthor author, BookGenre genre) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
-    }
 
     public Book(String title, BookAuthor author, BookGenre genre) {
         this.title = title;

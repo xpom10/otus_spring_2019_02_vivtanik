@@ -22,14 +22,6 @@ public class BookGenre {
     @Column(name = "genre_name")
     private String genre;
 
-    @OneToMany(mappedBy = "genre")
-    private List<Book> book;
-
-    public BookGenre(long id, String genre) {
-        this.bookGenreId = id;
-        this.genre = genre;
-    }
-
     public BookGenre(String genre) {
         this.genre = genre;
     }

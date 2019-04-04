@@ -22,14 +22,6 @@ public class BookAuthor {
     @Column(name = "author_name")
     private String authorName;
 
-    @OneToMany(mappedBy = "author")
-    private List<Book> book;
-
-    public BookAuthor(long id, String authorName) {
-        this.authorBookId = id;
-        this.authorName = authorName;
-    }
-
     public BookAuthor(String authorName) {
         this.authorName = authorName;
     }

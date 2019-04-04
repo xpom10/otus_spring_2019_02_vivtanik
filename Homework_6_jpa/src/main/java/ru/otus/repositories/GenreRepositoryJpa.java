@@ -12,7 +12,6 @@ import java.util.List;
 
 @Repository
 @Transactional
-@SuppressWarnings("JpaQlInspection")
 public class GenreRepositoryJpa implements GenreRepository {
 
     @PersistenceContext

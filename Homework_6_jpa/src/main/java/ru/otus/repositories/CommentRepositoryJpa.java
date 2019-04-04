@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 @Transactional
-@SuppressWarnings("JpaQlInspection")
 public class CommentRepositoryJpa implements CommentRepository {
 
     @PersistenceContext

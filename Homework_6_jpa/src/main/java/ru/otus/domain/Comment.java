@@ -16,7 +16,7 @@ public class Comment {
     @Column(name = "comment_id")
     private long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "book_id")
     private Book book;
 
