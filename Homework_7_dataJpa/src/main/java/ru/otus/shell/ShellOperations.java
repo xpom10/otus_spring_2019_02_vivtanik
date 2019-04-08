@@ -33,7 +33,7 @@ public class ShellOperations {
 
     @ShellMethod("Get book by id")
     public void bookById(@ShellOption int id) {
-        Book book = bookRepository.getBookById(id);
+        Book book = bookRepository.findBookById(id);
         if (book != null) {
             System.out.println(String.format("Book title: '%s'", book.getTitle()));
         } else {
@@ -43,19 +43,19 @@ public class ShellOperations {
 
     @ShellMethod("Create author")
     public void createAuthor(@ShellOption String name) {
-        BookAuthor bookAuthor = authorRepository.getAuthorByName(name);
+        BookAuthor bookAuthor = authorRepository.findAuthorByAuthorName(name);
         if (bookAuthor != null) {
             System.out.println(String.format("Author '%s' already exists", name));
             return;
         }
         BookAuthor newBookAuthor = new BookAuthor(name);
-        authorRepository.createAuthor(newBookAuthor);
+        authorRepository.save(newBookAuthor);
         System.out.println(String.format("Author '%s' create", name));
     }
 
     @ShellMethod("Get book id")
     public void bookIdByTitle(@ShellOption String title) {
-        Book book = bookRepository.getBookByTitle(title);
+        Book book = bookRepository.findBookByTitle(title);
         if (book != null) {
             System.out.println(String.format("Book id: %s", book.getId()));
         } else {
@@ -65,24 +65,24 @@ public class ShellOperations {
 
     @ShellMethod("Get all books")
     public void allBooks() {
-        List<Book> books = bookRepository.getBooks();
+        List<Book> books = bookRepository.findAll();
         books.forEach(book -> System.out.println(String.format("Book title: '%s'", book.getTitle())));
     }
 
     @ShellMethod("Create book")
     public void createBook(@ShellOption String title, @ShellOption String genre, @ShellOption String author) {
-        BookGenre bookGenre = genreRepository.getGenreByName(genre);
+        BookGenre bookGenre = genreRepository.findGenreByGenre(genre);
         if (bookGenre == null) {
             System.out.println(String.format("Genre '%s' for new book '%s' not found, please create Genre", genre, title));
             return;
         }
-        BookAuthor bookAuthor = authorRepository.getAuthorByName(author);
+        BookAuthor bookAuthor = authorRepository.findAuthorByAuthorName(author);
         if (bookAuthor == null) {
             System.out.println(String.format("Author '%s' for new book '%s' not found, please create Author", author, title));
             return;
         }
         Book bookForCreate = new Book(title, bookAuthor, bookGenre);
-        bookRepository.createBook(bookForCreate);
+        bookRepository.save(bookForCreate);
         System.out.println("Book created");
     }
 
@@ -98,32 +98,32 @@ public class ShellOperations {
 
     @ShellMethod("Get all genres")
     public void allGenres() {
-        List<BookGenre> genres = genreRepository.getGenres();
-        genres.forEach(genre -> System.out.println(String.format("Genre id: '%s', genre: '%s'", genre.getBookGenreId(), genre.getGenre())));
+        List<BookGenre> genres = genreRepository.findAll();
+        genres.forEach(genre -> System.out.println(String.format("Genre id: '%s', genre: '%s'", genre.getId(), genre.getGenre())));
     }
 
     @ShellMethod("Create genre")
     public void createGenre(@ShellOption String genre) {
         BookGenre bookGenre = new BookGenre(genre);
-        genreRepository.createGenre(bookGenre);
+        genreRepository.save(bookGenre);
         System.out.println(String.format("Genre '%s' create", genre));
     }
 
     @ShellMethod("Get all authors")
     public void getAuthors() {
-        List<BookAuthor> authors = authorRepository.getAuthors();
+        List<BookAuthor> authors = authorRepository.findAll();
         authors.forEach(bookAuthor -> System.out.println(String.format("Book author: '%s'", bookAuthor.getAuthorName())));
     }
 
     @ShellMethod("Delete author")
     public void deleteAuthor(@ShellOption long id) {
-        authorRepository.deleteAuthor(id);
+        authorRepository.deleteById(id);
         System.out.println(String.format("Author delete with id '%s'", id));
     }
 
     @ShellMethod("Get author id")
     public void getAuthor(@ShellOption String name) {
-        BookAuthor author = authorRepository.getAuthorByName(name);
+        BookAuthor author = authorRepository.findAuthorByAuthorName(name);
         if (author == null) {
             System.out.println(String.format("Author with name '%s' not found", name));
         } else {
@@ -133,19 +133,19 @@ public class ShellOperations {
 
     @ShellMethod("Create comment for book")
     public void createComment(@ShellOption String title, @ShellOption String comment) {
-        Book book = bookRepository.getBookByTitle(title);
+        Book book = bookRepository.findBookByTitle(title);
         if (book == null) {
             System.out.println(String.format("Book %s for comment %s not found", title, comment));
             return;
         }
         Comment createComment = new Comment(book, comment);
-        long id = commentRepository.createComment(createComment);
-        System.out.println(String.format("Comment for book %s created with id %s", title, id));
+        Comment id = commentRepository.save(createComment);
+        System.out.println(String.format("Comment for book %s created with id %s", title, id.getId()));
     }
 
     @ShellMethod("Get comments for book")
     public void getComments(@ShellOption long bookId) {
-        List<Comment> comments = commentRepository.getAllCommentForBook(bookId);
+        List<Comment> comments = commentRepository.findAllByBookId(bookId);
         comments.forEach(comment -> System.out.println(String.format("Comment %s for book %s", comment.getComment(), comment.getBook().getTitle())));
     }
 

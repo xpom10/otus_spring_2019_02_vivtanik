@@ -1,18 +1,15 @@
 package ru.otus.repositories;
 
+import org.springframework.data.repository.CrudRepository;
 import ru.otus.domain.BookAuthor;
 
 import java.util.List;
 
-public interface AuthorRepository {
+public interface AuthorRepository extends CrudRepository<BookAuthor, Long> {
 
-    BookAuthor getAuthorById(long id);
+    BookAuthor findBookAuthorById(long id);
 
-    List<BookAuthor> getAuthors();
+    List<BookAuthor> findAll();
 
-    BookAuthor getAuthorByName(String name);
-
-    long createAuthor(BookAuthor author);
-
-    long deleteAuthor(long id);
+    BookAuthor findAuthorByAuthorName(String name);
 }

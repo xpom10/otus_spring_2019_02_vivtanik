@@ -4,12 +4,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.otus.domain.Book;
 import ru.otus.domain.BookAuthor;
 import ru.otus.domain.BookGenre;
-import ru.otus.repositories.BookRepositoryJpa;
 
 import java.util.List;
 
@@ -17,50 +15,49 @@ import static org.junit.Assert.*;
 
 
 @DataJpaTest
-@Import(BookRepositoryJpa.class)
 @RunWith(SpringRunner.class)
 public class BookRepositoryTests {
 
     @Autowired
-    private BookRepositoryJpa bookRepositoryJpa;
+    private BookRepository bookRepository;
 
     @Test
     public void testGetById() {
-        Book book = bookRepositoryJpa.getBookById(1);
+        Book book = bookRepository.findBookById(1);
         assertEquals("Book1", book.getTitle());
-        assertEquals(1, book.getGenre().getBookGenreId());
-        assertEquals(1, book.getAuthor().getAuthorBookId());
+        assertEquals(1, book.getGenre().getId());
+        assertEquals(1, book.getAuthor().getId());
     }
 
     @Test
     public void testGetByIdNotFound() {
-        Book book = bookRepositoryJpa.getBookById(10);
+        Book book = bookRepository.findBookById(10);
         assertNull(book);
     }
 
     @Test
     public void testGetByTitle() {
-        Book book = bookRepositoryJpa.getBookByTitle("Book2");
+        Book book = bookRepository.findBookByTitle("Book2");
         assertEquals(2, book.getId());
-        assertEquals(2, book.getGenre().getBookGenreId());
-        assertEquals(2, book.getAuthor().getAuthorBookId());
+        assertEquals(2, book.getGenre().getId());
+        assertEquals(2, book.getAuthor().getId());
     }
 
     @Test
     public void testGetByTitleNotFound() {
-        Book book = bookRepositoryJpa.getBookByTitle("Book4");
+        Book book = bookRepository.findBookByTitle("Book4");
         assertNull(book);
     }
 
     @Test
     public void testCount() {
-        long actualCount = bookRepositoryJpa.count();
+        long actualCount = bookRepository.count();
         assertEquals(3, actualCount);
     }
 
     @Test
     public void testList() {
-        List<Book> books = bookRepositoryJpa.getBooks();
+        List<Book> books = bookRepository.findAll();
         assertEquals(3, books.size());
         books.forEach(book -> assertTrue(book.getTitle().matches("^Book[123]$")));
     }
@@ -70,17 +67,16 @@ public class BookRepositoryTests {
         BookAuthor author = new BookAuthor(1, "Author1");
         BookGenre genre = new BookGenre(1, "Genre1");
         Book expectedBook = new Book("Book4", author, genre);
-        long id = bookRepositoryJpa.createBook(expectedBook);
-        expectedBook.setId(id);
-        Book actualBook = bookRepositoryJpa.getBookById(id);
+        bookRepository.save(expectedBook);
+        Book actualBook = bookRepository.findBookById(expectedBook.getId());
         assertEquals(expectedBook, actualBook);
     }
 
     @Test
     public void testDeleteBook() {
-        long count = bookRepositoryJpa.deleteBookById(3);
+        long count = bookRepository.deleteBookById(3);
         assertTrue(count > 0);
-        long actualCount = bookRepositoryJpa.count();
+        long actualCount = bookRepository.count();
         assertEquals(2, actualCount);
     }
 
