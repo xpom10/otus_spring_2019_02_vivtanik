@@ -4,12 +4,13 @@ import org.springframework.data.repository.CrudRepository;
 import ru.otus.domain.BookGenre;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GenreRepository extends CrudRepository<BookGenre, Long> {
 
-    BookGenre findGenreById(long id);
+    Optional<BookGenre> findGenreById(long id);
 
     List<BookGenre> findAll();
 
-    BookGenre findGenreByGenre(String name);
+    Optional<BookGenre> findGenreByGenre(String name);
 }

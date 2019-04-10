@@ -8,6 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.otus.domain.BookAuthor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -32,26 +33,27 @@ public class AuthorRepositoryTest {
 
     @Test
     public void testGetAuthorById() {
-        BookAuthor bookAuthor = authorRepository.findBookAuthorById(1);
-        assertEquals("Author1", bookAuthor.getAuthorName());
+        Optional<BookAuthor> bookAuthor = authorRepository.findBookAuthorById(1);
+        assertTrue(bookAuthor.isPresent());
+        assertEquals("Author1", bookAuthor.get().getAuthorName());
     }
 
     @Test
     public void testGetAuthorByIdNotFound() {
-        BookAuthor bookAuthor = authorRepository.findBookAuthorById(10);
-        assertNull(bookAuthor);
+        Optional<BookAuthor> bookAuthor = authorRepository.findBookAuthorById(10);
+        assertFalse(bookAuthor.isPresent());
     }
 
     @Test
     public void testGetAuthorByName() {
-        BookAuthor bookAuthor = authorRepository.findAuthorByAuthorName("Author1");
-        assertEquals(1, bookAuthor.getId());
+        Optional<BookAuthor> bookAuthor = authorRepository.findAuthorByAuthorName("Author1");
+        assertEquals(1, bookAuthor.get().getId());
     }
 
     @Test
     public void testGetAuthorByNameNotFound() {
-        BookAuthor bookAuthor = authorRepository.findAuthorByAuthorName("Author10");
-        assertNull(bookAuthor);
+        Optional<BookAuthor> bookAuthor = authorRepository.findAuthorByAuthorName("Author10");
+        assertFalse(bookAuthor.isPresent());
     }
 
     @Test
@@ -59,8 +61,8 @@ public class AuthorRepositoryTest {
         BookAuthor bookAuthor = new BookAuthor("Author4");
         authorRepository.save(bookAuthor);
         assertTrue(bookAuthor.getId() > 0);
-        BookAuthor bookAuthorFromDb = authorRepository.findAuthorByAuthorName("Author4");
-        assertNotNull(bookAuthorFromDb);
+        Optional<BookAuthor> bookAuthorFromDb = authorRepository.findAuthorByAuthorName("Author4");
+        assertTrue(bookAuthorFromDb.isPresent());
     }
 
     @Test

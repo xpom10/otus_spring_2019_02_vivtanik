@@ -4,12 +4,13 @@ import org.springframework.data.repository.CrudRepository;
 import ru.otus.domain.BookAuthor;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AuthorRepository extends CrudRepository<BookAuthor, Long> {
 
-    BookAuthor findBookAuthorById(long id);
+    Optional<BookAuthor> findBookAuthorById(long id);
 
     List<BookAuthor> findAll();
 
-    BookAuthor findAuthorByAuthorName(String name);
+    Optional<BookAuthor> findAuthorByAuthorName(String name);
 }

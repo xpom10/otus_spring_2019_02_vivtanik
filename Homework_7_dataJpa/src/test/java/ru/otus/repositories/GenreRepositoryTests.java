@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.otus.domain.BookGenre;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -28,26 +29,27 @@ public class GenreRepositoryTests {
 
     @Test
     public void testGetGenreById() {
-        BookGenre bookGenre = genreRepository.findGenreById(1);
-        assertEquals("Genre1", bookGenre.getGenre());
+        Optional<BookGenre> bookGenre = genreRepository.findGenreById(1);
+        assertTrue(bookGenre.isPresent());
+        assertEquals("Genre1", bookGenre.get().getGenre());
     }
 
     @Test
     public void testGetGenreByIdNotFound() {
-        BookGenre bookGenre = genreRepository.findGenreById(10);
-        assertNull(bookGenre);
+        Optional<BookGenre> bookGenre = genreRepository.findGenreById(10);
+        assertFalse(bookGenre.isPresent());
     }
 
     @Test
     public void testGetGenreByName() {
-        BookGenre bookGenre = genreRepository.findGenreByGenre("Genre1");
-        assertEquals(1, bookGenre.getId());
+        Optional<BookGenre> bookGenre = genreRepository.findGenreByGenre("Genre1");
+        assertEquals(1, bookGenre.get().getId());
     }
 
     @Test
     public void testGetGenreByNameNotFound() {
-        BookGenre bookGenre = genreRepository.findGenreByGenre("Genre10");
-        assertNull(bookGenre);
+        Optional<BookGenre> bookGenre = genreRepository.findGenreByGenre("Genre10");
+        assertFalse(bookGenre.isPresent());
     }
 
     @Test
@@ -55,7 +57,7 @@ public class GenreRepositoryTests {
         BookGenre bookGenre = new BookGenre("Genre4");
         genreRepository.save(bookGenre);
         assertTrue(bookGenre.getId() > 0);
-        BookGenre genre = genreRepository.findGenreByGenre("Genre4");
-        assertNotNull(genre);
+        Optional<BookGenre> genre = genreRepository.findGenreByGenre("Genre4");
+        assertTrue(genre.isPresent());
     }
 }

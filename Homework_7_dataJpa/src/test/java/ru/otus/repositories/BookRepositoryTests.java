@@ -10,6 +10,7 @@ import ru.otus.domain.BookAuthor;
 import ru.otus.domain.BookGenre;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -23,30 +24,33 @@ public class BookRepositoryTests {
 
     @Test
     public void testGetById() {
-        Book book = bookRepository.findBookById(1);
-        assertEquals("Book1", book.getTitle());
-        assertEquals(1, book.getGenre().getId());
-        assertEquals(1, book.getAuthor().getId());
+        Optional<Book> book = bookRepository.findBookById(1);
+        assertTrue(book.isPresent());
+        assertEquals("Book1", book.get().getTitle());
+        assertEquals(1, book.get().getGenre().getId());
+        assertEquals(1, book.get().getAuthor().getId());
     }
 
     @Test
     public void testGetByIdNotFound() {
-        Book book = bookRepository.findBookById(10);
-        assertNull(book);
+        Optional<Book> book = bookRepository.findBookById(10);
+        assertFalse(book.isPresent());
     }
 
     @Test
     public void testGetByTitle() {
-        Book book = bookRepository.findBookByTitle("Book2");
-        assertEquals(2, book.getId());
-        assertEquals(2, book.getGenre().getId());
-        assertEquals(2, book.getAuthor().getId());
+        Optional<Book> book = bookRepository.findBookByTitle("Book2");
+        Book actualBook = book.orElse(null);
+        assertNotNull(actualBook);
+        assertEquals(2, actualBook.getId());
+        assertEquals(2, actualBook.getGenre().getId());
+        assertEquals(2, actualBook.getAuthor().getId());
     }
 
     @Test
     public void testGetByTitleNotFound() {
-        Book book = bookRepository.findBookByTitle("Book4");
-        assertNull(book);
+        Optional<Book> book = bookRepository.findBookByTitle("Book4");
+        assertFalse(book.isPresent());
     }
 
     @Test
@@ -68,8 +72,8 @@ public class BookRepositoryTests {
         BookGenre genre = new BookGenre(1, "Genre1");
         Book expectedBook = new Book("Book4", author, genre);
         bookRepository.save(expectedBook);
-        Book actualBook = bookRepository.findBookById(expectedBook.getId());
-        assertEquals(expectedBook, actualBook);
+        Optional<Book> actualBook = bookRepository.findBookById(expectedBook.getId());
+        assertEquals(expectedBook, actualBook.orElse(null));
     }
 
     @Test

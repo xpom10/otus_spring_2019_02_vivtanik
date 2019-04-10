@@ -15,6 +15,7 @@ import ru.otus.repositories.CommentRepository;
 import ru.otus.repositories.GenreRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @ShellComponent
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
@@ -33,9 +34,9 @@ public class ShellOperations {
 
     @ShellMethod("Get book by id")
     public void bookById(@ShellOption int id) {
-        Book book = bookRepository.findBookById(id);
-        if (book != null) {
-            System.out.println(String.format("Book title: '%s'", book.getTitle()));
+        Optional<Book> book = bookRepository.findBookById(id);
+        if (book.isPresent()) {
+            System.out.println(String.format("Book title: '%s'", book.get().getTitle()));
         } else {
             System.out.println(String.format("Book for id = '%s' not found", id));
         }
@@ -43,8 +44,8 @@ public class ShellOperations {
 
     @ShellMethod("Create author")
     public void createAuthor(@ShellOption String name) {
-        BookAuthor bookAuthor = authorRepository.findAuthorByAuthorName(name);
-        if (bookAuthor != null) {
+        Optional<BookAuthor> bookAuthor = authorRepository.findAuthorByAuthorName(name);
+        if (bookAuthor.isPresent()) {
             System.out.println(String.format("Author '%s' already exists", name));
             return;
         }
@@ -55,9 +56,9 @@ public class ShellOperations {
 
     @ShellMethod("Get book id")
     public void bookIdByTitle(@ShellOption String title) {
-        Book book = bookRepository.findBookByTitle(title);
-        if (book != null) {
-            System.out.println(String.format("Book id: %s", book.getId()));
+        Optional<Book> book = bookRepository.findBookByTitle(title);
+        if (book.isPresent()) {
+            System.out.println(String.format("Book id: %s", book.get().getId()));
         } else {
             System.out.println(String.format("Book for title = '%s' not found", title));
         }
@@ -71,17 +72,17 @@ public class ShellOperations {
 
     @ShellMethod("Create book")
     public void createBook(@ShellOption String title, @ShellOption String genre, @ShellOption String author) {
-        BookGenre bookGenre = genreRepository.findGenreByGenre(genre);
-        if (bookGenre == null) {
+        Optional<BookGenre> bookGenre = genreRepository.findGenreByGenre(genre);
+        if (!bookGenre.isPresent()) {
             System.out.println(String.format("Genre '%s' for new book '%s' not found, please create Genre", genre, title));
             return;
         }
-        BookAuthor bookAuthor = authorRepository.findAuthorByAuthorName(author);
-        if (bookAuthor == null) {
+        Optional<BookAuthor> bookAuthor = authorRepository.findAuthorByAuthorName(author);
+        if (!bookAuthor.isPresent()) {
             System.out.println(String.format("Author '%s' for new book '%s' not found, please create Author", author, title));
             return;
         }
-        Book bookForCreate = new Book(title, bookAuthor, bookGenre);
+        Book bookForCreate = new Book(title, bookAuthor.get(), bookGenre.get());
         bookRepository.save(bookForCreate);
         System.out.println("Book created");
     }
@@ -123,22 +124,22 @@ public class ShellOperations {
 
     @ShellMethod("Get author id")
     public void getAuthor(@ShellOption String name) {
-        BookAuthor author = authorRepository.findAuthorByAuthorName(name);
-        if (author == null) {
-            System.out.println(String.format("Author with name '%s' not found", name));
+        Optional<BookAuthor> author = authorRepository.findAuthorByAuthorName(name);
+        if (author.isPresent()) {
+            System.out.println(String.format("Author name '%s'", author.get().getAuthorName()));
         } else {
-            System.out.println(String.format("Author name '%s'", author.getAuthorName()));
+            System.out.println(String.format("Author with name '%s' not found", name));
         }
     }
 
     @ShellMethod("Create comment for book")
     public void createComment(@ShellOption String title, @ShellOption String comment) {
-        Book book = bookRepository.findBookByTitle(title);
-        if (book == null) {
+        Optional<Book> book = bookRepository.findBookByTitle(title);
+        if (!book.isPresent()) {
             System.out.println(String.format("Book %s for comment %s not found", title, comment));
             return;
         }
-        Comment createComment = new Comment(book, comment);
+        Comment createComment = new Comment(book.get(), comment);
         Comment id = commentRepository.save(createComment);
         System.out.println(String.format("Comment for book %s created with id %s", title, id.getId()));
     }
