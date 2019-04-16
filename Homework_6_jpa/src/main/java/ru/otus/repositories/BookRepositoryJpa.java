@@ -4,19 +4,19 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.Book;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 
 @Repository
 @Transactional
-@SuppressWarnings("JpaQlInspection")
 public class BookRepositoryJpa implements BookRepository {
 
     @PersistenceContext
     private EntityManager em;
+
+    private static String SELECT_QUERY = "select b from Book b " +
+            "join fetch b.author a " +
+            "join fetch b.genre g ";
 
     @Override
     public long count() {
@@ -27,7 +27,7 @@ public class BookRepositoryJpa implements BookRepository {
     @Override
     public Book getBookById(long id) {
         try {
-            TypedQuery<Book> query = em.createQuery("select b from Book b where id = :id", Book.class);
+            TypedQuery<Book> query = em.createQuery(SELECT_QUERY + "where b.id = :id", Book.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -37,14 +37,14 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public List<Book> getBooks() {
-        TypedQuery<Book> query = em.createQuery("select b from Book b", Book.class);
+        TypedQuery<Book> query = em.createQuery(SELECT_QUERY, Book.class);
         return query.getResultList();
     }
 
     @Override
     public Book getBookByTitle(String title) {
         try {
-            TypedQuery<Book> query = em.createQuery("select b from Book b where title = :title", Book.class);
+            TypedQuery<Book> query = em.createQuery(SELECT_QUERY + "where b.title = :title", Book.class);
             query.setParameter("title", title);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -59,9 +59,9 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    public long deleteBookById(int id) {
-        TypedQuery<Long> query = em.createQuery("delete from Book b where id = :id", Long.class);
+    public long deleteBookById(long id) {
+        Query query = em.createQuery("delete from Book b where b.id = :id");
         query.setParameter("id", id);
-        return query.getSingleResult();
+        return query.executeUpdate();
     }
 }

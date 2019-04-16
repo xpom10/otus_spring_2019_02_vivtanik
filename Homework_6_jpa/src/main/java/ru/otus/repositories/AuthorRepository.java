@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface AuthorRepository {
 
-    BookAuthor getAuthorById(int id);
+    BookAuthor getAuthorById(long id);
 
     List<BookAuthor> getAuthors();
 
     BookAuthor getAuthorByName(String name);
 
-    long createAuthor(String author);
+    long createAuthor(BookAuthor author);
 
-    long deleteAuthor(int id);
+    long deleteAuthor(long id);
 }

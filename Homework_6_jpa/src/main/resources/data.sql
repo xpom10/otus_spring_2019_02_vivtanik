@@ -24,3 +24,12 @@ insert into BOOKS
 values (4, 'Анна Каренина', 1, 2);
 insert into BOOKS
 values (5, 'Горе от ума', 3, 3);
+
+insert into COMMENTS
+values (1, 1, 'В «Капитанской дочке» автор затронул исторические и общечеловеческие проблемы.');
+insert into COMMENTS
+values (2,  1,'Классика - она такая и должна быть.');
+insert into COMMENTS
+values (3, 3,'Вечная классика');
+insert into COMMENTS
+values (4, 4,'Мой любимый роман');

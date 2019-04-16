@@ -12,16 +12,15 @@ import java.util.List;
 
 @Repository
 @Transactional
-@SuppressWarnings("JpaQlInspection")
 public class GenreRepositoryJpa implements GenreRepository {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public BookGenre getGenreById(int id) {
+    public BookGenre getGenreById(long id) {
         try {
-            TypedQuery<BookGenre> query = em.createQuery("select g from BookGenre g where book_genre_id = :id", BookGenre.class);
+            TypedQuery<BookGenre> query = em.createQuery("select g from BookGenre g where g.bookGenreId = :id", BookGenre.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -47,9 +46,8 @@ public class GenreRepositoryJpa implements GenreRepository {
     }
 
     @Override
-    public long createGenre(String genre) {
-        BookGenre bookGenre = new BookGenre(genre);
-        em.persist(bookGenre);
-        return bookGenre.getBookGenreId();
+    public long createGenre(BookGenre genre) {
+        em.persist(genre);
+        return genre.getBookGenreId();
     }
 }

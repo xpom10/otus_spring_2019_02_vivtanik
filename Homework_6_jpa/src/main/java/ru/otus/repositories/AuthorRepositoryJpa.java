@@ -4,10 +4,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.domain.BookAuthor;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 
 @Repository
@@ -19,9 +16,9 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     private EntityManager em;
 
     @Override
-    public BookAuthor getAuthorById(int id) {
+    public BookAuthor getAuthorById(long id) {
         try {
-            TypedQuery<BookAuthor> query = em.createQuery("select a from BookAuthor a where author_id = :id", BookAuthor.class);
+            TypedQuery<BookAuthor> query = em.createQuery("select a from BookAuthor a where a.authorBookId = :id", BookAuthor.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -38,7 +35,7 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     @Override
     public BookAuthor getAuthorByName(String name) {
         try {
-            TypedQuery<BookAuthor> query = em.createQuery("select a from BookAuthor a where author_name = :name", BookAuthor.class);
+            TypedQuery<BookAuthor> query = em.createQuery("select a from BookAuthor a where a.authorName = :name", BookAuthor.class);
             query.setParameter("name", name);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -47,16 +44,15 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     }
 
     @Override
-    public long createAuthor(String author) {
-        BookAuthor bookAuthor = new BookAuthor(author);
-        em.persist(bookAuthor);
-        return bookAuthor.getAuthorBookId();
+    public long createAuthor(BookAuthor author) {
+        em.persist(author);
+        return author.getAuthorBookId();
     }
 
     @Override
-    public long deleteAuthor(int id) {
-        TypedQuery<Long> query = em.createQuery("delete from BookAuthor a where author_id = :id", Long.class);
+    public long deleteAuthor(long id) {
+        Query query = em.createQuery("delete from BookAuthor a where a.authorBookId = :id");
         query.setParameter("id", id);
-        return query.getSingleResult();
+        return query.executeUpdate();
     }
 }

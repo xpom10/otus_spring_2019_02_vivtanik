@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface GenreRepository {
 
-    BookGenre getGenreById(int id);
+    BookGenre getGenreById(long id);
 
     List<BookGenre> getGenres();
 
     BookGenre getGenreByName(String name);
 
-    long createGenre(String genre);
+    long createGenre(BookGenre genre);
 }

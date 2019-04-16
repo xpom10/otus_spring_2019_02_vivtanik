@@ -5,4 +5,4 @@ spring:
     password: Passw0rd
     initialization-mode: always
   jpa:
-    hibernate.ddl-auto: create-drop
+    show-sql: true

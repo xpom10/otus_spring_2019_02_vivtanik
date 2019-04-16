@@ -1,29 +1,29 @@
 package ru.otus.shell;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.domain.Book;
 import ru.otus.domain.BookAuthor;
 import ru.otus.domain.BookGenre;
+import ru.otus.domain.Comment;
 import ru.otus.repositories.AuthorRepository;
 import ru.otus.repositories.BookRepository;
+import ru.otus.repositories.CommentRepository;
 import ru.otus.repositories.GenreRepository;
 
 import java.util.List;
 
 @ShellComponent
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class ShellOperations {
 
     private final BookRepository bookRepository;
     private final GenreRepository genreRepository;
     private final AuthorRepository authorRepository;
-
-    public ShellOperations(BookRepository bookRepository, GenreRepository genreRepository, AuthorRepository authorRepository) {
-        this.bookRepository = bookRepository;
-        this.genreRepository = genreRepository;
-        this.authorRepository = authorRepository;
-    }
+    private final CommentRepository commentRepository;
 
     @ShellMethod("Get count of books")
     public void bookCount() {
@@ -48,7 +48,8 @@ public class ShellOperations {
             System.out.println(String.format("Author '%s' already exists", name));
             return;
         }
-        authorRepository.createAuthor(name);
+        BookAuthor newBookAuthor = new BookAuthor(name);
+        authorRepository.createAuthor(newBookAuthor);
         System.out.println(String.format("Author '%s' create", name));
     }
 
@@ -103,7 +104,8 @@ public class ShellOperations {
 
     @ShellMethod("Create genre")
     public void createGenre(@ShellOption String genre) {
-        genreRepository.createGenre(genre);
+        BookGenre bookGenre = new BookGenre(genre);
+        genreRepository.createGenre(bookGenre);
         System.out.println(String.format("Genre '%s' create", genre));
     }
 
@@ -114,7 +116,7 @@ public class ShellOperations {
     }
 
     @ShellMethod("Delete author")
-    public void deleteAuthor(@ShellOption int id) {
+    public void deleteAuthor(@ShellOption long id) {
         authorRepository.deleteAuthor(id);
         System.out.println(String.format("Author delete with id '%s'", id));
     }
@@ -125,8 +127,26 @@ public class ShellOperations {
         if (author == null) {
             System.out.println(String.format("Author with name '%s' not found", name));
         } else {
-            System.out.println(String.format("Author name '%s'", author.getAuthorBookId()));
+            System.out.println(String.format("Author name '%s'", author.getAuthorName()));
         }
+    }
+
+    @ShellMethod("Create comment for book")
+    public void createComment(@ShellOption String title, @ShellOption String comment) {
+        Book book = bookRepository.getBookByTitle(title);
+        if (book == null) {
+            System.out.println(String.format("Book %s for comment %s not found", title, comment));
+            return;
+        }
+        Comment createComment = new Comment(book, comment);
+        long id = commentRepository.createComment(createComment);
+        System.out.println(String.format("Comment for book %s created with id %s", title, id));
+    }
+
+    @ShellMethod("Get comments for book")
+    public void getComments(@ShellOption long bookId) {
+        List<Comment> comments = commentRepository.getAllCommentForBook(bookId);
+        comments.forEach(comment -> System.out.println(String.format("Comment %s for book %s", comment.getComment(), comment.getBook().getTitle())));
     }
 
 }
