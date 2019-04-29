@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -15,24 +18,41 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document(collection = "books")
 public class Book {
 
-
     @Id
     private String id;
 
     @Field("title")
     private String title;
 
+    @Field("genre")
+    private Genre genre;
+
     @DBRef
     @Field("author")
-    private BookAuthor author;
+    private Author author;
 
-    @DBRef
-    @Field("genre")
-    private BookGenre genre;
+    @Field("comments")
+    private List<Comment> comments = new ArrayList<>();
 
-    public Book(String title, BookAuthor author, BookGenre genre) {
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    public Book(String title, Genre genre, Author author) {
         this.title = title;
-        this.author = author;
         this.genre = genre;
+        this.author = author;
+    }
+
+    public Book(String title, Genre genre) {
+        this.title = title;
+        this.genre = genre;
+    }
+
+    public Book(String title, Genre genre, Author author, List<Comment> comments) {
+        this.title = title;
+        this.genre = genre;
+        this.author = author;
+        comments.forEach(this::addComment);
     }
 }
