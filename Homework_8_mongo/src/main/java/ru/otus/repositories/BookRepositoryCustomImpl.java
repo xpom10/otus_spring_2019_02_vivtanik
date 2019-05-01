@@ -14,7 +14,8 @@ import ru.otus.domain.Genre;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 
 @RequiredArgsConstructor
 public class BookRepositoryCustomImpl implements BookRepositoryCustom {
@@ -31,7 +32,7 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
 
     @Override
     public List<Genre> findGenres() {
-        Aggregation aggregation = newAggregation(unwind("genre"), project().and("genre.genreName").as("genre_name"));
+        Aggregation aggregation = newAggregation(project().and("genre.genreName").as("genre_name"));
         return template.aggregate(aggregation, Book.class, Genre.class).getMappedResults()
                 .stream()
                 .distinct()
