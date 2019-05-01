@@ -3,3 +3,5 @@ spring:
     mongodb:
       port: 0
       database: test
+  profiles:
+    active: test

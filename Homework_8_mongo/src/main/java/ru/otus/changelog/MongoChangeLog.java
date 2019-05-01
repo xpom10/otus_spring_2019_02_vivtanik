@@ -3,6 +3,7 @@ package ru.otus.changelog;
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
@@ -12,6 +13,7 @@ import ru.otus.domain.Genre;
 import java.util.Arrays;
 import java.util.Collections;
 
+@Profile("dev")
 @ChangeLog(order = "001")
 public class MongoChangeLog {
 
