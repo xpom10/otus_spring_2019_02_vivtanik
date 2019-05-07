@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="book.title">Книга</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1 th:text="${book.title}">Заголовок книги</h1>
+    <h2 th:text="${book.author.authorName}">Автор</h2>
+    <p th:if="!${book.comments.isEmpty()}">Комментарии к книге:</p>
+    <ul th:each="comment : ${book.comments}">
+        <li th:text="${comment.comment}">Комментарий</li>
+    </ul>
+
+    <form action="#" th:action="@{/comment(id=${book.id})}" th:object="${comment}" method="post">
+        <p>Добавить комментарий:
+            <input type="text" th:field="*{comment}"/>
+                <span th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
+        </p>
+        <p>
+            <button type="submit">Добавить комментарий</button>
+            <button type="reset">Отмена</button>
+        </p>
+    </form>
+
+    <button>
+        <a th:href="@{/books}" href="books.html">К списку книг</a>
+    </button>
+</div>
+</body>
+</html>
