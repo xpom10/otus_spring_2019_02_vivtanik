@@ -12,15 +12,30 @@
 <body>
 <h1>Новая книга:</h1>
 <form action="#" th:action="@{/add}" th:object="${book}" method="post">
-    <p>Название книги: <input type="text" th:field="*{title}"/>
-        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span></p>
-    <p>Автор: <input type="text" th:field="*{author.authorName}"/>
-        <span th:if="${#fields.hasErrors('author.authorName')}" th:errors="*{author.authorName}"></span></p>
-    <p>Жанр: <input type="text" th:field="*{genre.genreName}"/>
-        <span th:if="${#fields.hasErrors('genre.genreName')}" th:errors="*{genre.genreName}"></span></p>
+    <p>
+        <label>Название книги:
+            <input type="text" th:field="${book.title}"/>
+        </label>
+            <span th:if="${#fields.hasErrors('title')}" th:errors="${book.title}"></span></p>
+    <p>
+        <label>Автор:
+            <input type="text" th:field="*{author.authorName}" list="authors"/>
+        </label>
+        <datalist id="authors">
+            <option th:each="author : ${authors}" th:value="${author.authorName}"></option>
+        </datalist>
+            <span th:if="${#fields.hasErrors('author.authorName')}" th:errors="*{author.authorName}"></span></p>
+    <p>
+        <label>Жанр:
+            <input type="text" th:field="*{genreName}" list="genres"/>
+        </label>
+        <datalist id="genres">
+            <option th:each="genre : ${genres}" th:value="${genre.genreName}"></option>
+        </datalist>
+            <span th:if="${#fields.hasErrors('genreName')}" th:errors="*{genreName}"></span></p>
     <p>
         <button type="submit">Сохранить</button>
-        <button type="reset">Отмена</button>
+        <button type="reset" onclick="window.location='/books'">Отмена</button>
     </p>
 </form>
 

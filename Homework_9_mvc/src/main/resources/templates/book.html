@@ -20,7 +20,7 @@
     <h2 th:text="${book.author.authorName}">Автор</h2>
     <p th:if="!${book.comments.isEmpty()}">Комментарии к книге:</p>
     <ul th:each="comment : ${book.comments}">
-        <li th:text="${comment.comment}">Комментарий</li>
+        <li th:text="${comment}">Комментарий</li>
     </ul>
 
     <form action="#" th:action="@{/comment(id=${book.id})}" th:object="${comment}" method="post">
@@ -30,7 +30,6 @@
         </p>
         <p>
             <button type="submit">Добавить комментарий</button>
-            <button type="reset">Отмена</button>
         </p>
     </form>
 

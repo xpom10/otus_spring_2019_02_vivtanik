@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import ru.otus.dto.AuthorDto;
+import ru.otus.dto.BookDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -21,10 +23,23 @@ public class Author {
     private String id;
 
     @Field("author_name")
-    @NotBlank(message = "Автор не может быть пустым")
     private String authorName;
 
     public Author(String authorName) {
         this.authorName = authorName;
+    }
+
+    public static Author fromDto(AuthorDto authorDto) {
+        Author author = new Author();
+        author.setId(authorDto.id);
+        author.setAuthorName(authorDto.authorName);
+        return author;
+    }
+
+    public static AuthorDto toDto(Author author) {
+        AuthorDto authorDto = new AuthorDto();
+        authorDto.setId(author.id);
+        authorDto.setAuthorName(author.authorName);
+        return authorDto;
     }
 }

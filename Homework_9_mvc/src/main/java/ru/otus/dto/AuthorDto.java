@@ -1,19 +1,18 @@
-package ru.otus.domain;
+package ru.otus.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.validation.constraints.NotBlank;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
+public class AuthorDto {
 
-    @Field("comment")
-    private String comment;
+    public String id;
 
+    @NotBlank(message = "Автор не может быть пустым")
+    public String authorName;
 }
