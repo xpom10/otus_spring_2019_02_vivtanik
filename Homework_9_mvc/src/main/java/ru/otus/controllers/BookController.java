@@ -51,7 +51,7 @@ public class BookController {
         return modelAndView;
     }
 
-    @PostMapping("/comment")
+    @PostMapping(value = "/comment", produces = "application/json")
     public String addComment(@RequestParam(required = false) String id, @ModelAttribute("comment") @Valid CommentDto commentDto, BindingResult result, Model model) {
         if (result.hasErrors()) {
             Optional<Book> book = bookRepository.findById(id);
