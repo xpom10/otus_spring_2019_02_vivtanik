@@ -37,6 +37,12 @@ public class Book {
     @Field("comments")
     private List<Comment> comments = new ArrayList<>();
 
+    public Book(String title, Genre genre, Author author) {
+        this.title = title;
+        this.genre = genre;
+        this.author = author;
+    }
+
     private void addComment(Comment comment) {
         this.comments.add(comment);
     }

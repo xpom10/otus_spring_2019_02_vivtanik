@@ -6,19 +6,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.json.GsonTester;
-import org.springframework.boot.test.json.JsonContent;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
-import ru.otus.dto.CommentDto;
 import ru.otus.repositories.AuthorRepository;
 import ru.otus.repositories.BookRepository;
 
@@ -84,19 +78,58 @@ public class BookControllerTests {
     }
 
     @Test
+    public void testAddBlankComment() throws Exception {
+        Mockito.when(bookRepository.findById("1"))
+                .thenReturn(Optional.of(new Book("1", "book1", new Genre("genre1"), new Author("111", "author1"))));
+
+        mvc.perform(post("/comment?id=1").param("comment", ""))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Комментарий не может быть пустым")));
+    }
+
+    @Test
     public void testAddComment() throws Exception {
         Mockito.when(bookRepository.findById("1"))
                 .thenReturn(Optional.of(new Book("1", "book1", new Genre("genre1"), new Author("111", "author1"))));
 
-        CommentDto commentDto = new CommentDto("comment1");
-        String content = mapper.writeValueAsString(commentDto);
+        mvc.perform(post("/comment?id=1").param("comment", "comment1"))
+                .andExpect(status().is(302));
+    }
 
-        mvc.perform(post("/comment?id=1").content(content).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("author1")))
-                .andExpect(content().string(containsString("comment1")))
-                .andExpect(content().string(containsString("book1")));
+    @Test
+    public void testAddBook() throws Exception {
+        mvc.perform(post("/add").param("title", "title1").param("author.authorName", "author1").param("genreName", "genre1"))
+                .andExpect(status().is(302));
+    }
+
+    @Test
+    public void testAddBlankBook() throws Exception {
+        mvc.perform(post("/add").param("title", "").param("author.authorName", "").param("genreName", ""))
+                .andExpect(status().is(200))
+                .andExpect(content().string(containsString("Название книги не может быть пустым")))
+                .andExpect(content().string(containsString("Автор не может быть пустым")))
+                .andExpect(content().string(containsString("Жанр не может быть пустым")));
+    }
+
+    @Test
+    public void testEditBook() throws Exception {
+        Mockito.when(bookRepository.findById("1"))
+                .thenReturn(Optional.of(new Book("1", "book1", new Genre("genre1"), new Author("111", "author1"))));
+
+        mvc.perform(post("/edit?id=1").param("title", "title1").param("author.authorName", "author1").param("genreName", "genre1"))
+                .andExpect(status().is(302));
+    }
+
+    @Test
+    public void testEditBlankBook() throws Exception {
+        Mockito.when(bookRepository.findById("1"))
+                .thenReturn(Optional.of(new Book("1", "book1", new Genre("genre1"), new Author("111", "author1"))));
+
+        mvc.perform(post("/edit?id=1").param("title", "").param("author.authorName", "").param("genreName", ""))
+                .andExpect(status().is(200))
+                .andExpect(content().string(containsString("Название книги не может быть пустым")))
+                .andExpect(content().string(containsString("Автор не может быть пустым")))
+                .andExpect(content().string(containsString("Жанр не может быть пустым")));
     }
 
 }
