@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${author.authorName}">Автор</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="${author.authorName}">Автор</h1>
+<p>Книги автора:</p>
+<ol>
+    <li th:each="book : ${books}"><a th:text="${book.title}" th:href="@{/book(id=${book.id})}" href="book.html">Заголовок книги</a></li>
+</ol>
+<button>
+    <a th:href="@{/books}" href="books.html">К списку книг</a>
+</button>
+</body>
+</html>
