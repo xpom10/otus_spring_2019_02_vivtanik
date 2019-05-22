@@ -18,7 +18,7 @@
 <body>
 <h1 th:text="${author.authorName}">Автор</h1>
 <p>Книги автора:</p>
-<ol>
+<ol id="comments-id">
 </ol>
 <button>
     <a th:href="@{/books}" href="books.html">К списку книг</a>
@@ -27,10 +27,10 @@
 <script>
 
     $(function () {
-        $.get('/api/${authorId}/books').done(function (books) {
+        $.get('/api/[[${author.id}]]/books').done(function (books) {
             books.forEach(function (books) {
-                $('ol').append(`
-                    <li><a value="${books.title}" href="/book?id=${books.id}">Заголовок книги</a></li>
+                $('ol#comments-id').append(`
+                    <li><a href="/book?id=${books.id}">${books.title}</a></li>
                 `);
             });
         })

@@ -22,15 +22,12 @@ import java.util.stream.Collectors;
 public class AuthorController {
 
     private final AuthorRepository authorRepository;
-    private final BookRepository bookRepository;
 
     @GetMapping("/author")
     public String getAuthor(@RequestParam String id, Model model) {
-        List<BookDto> authorBooks = bookRepository.findBookByAuthor_Id(id).stream().map(Book::toDto).collect(Collectors.toList());
         Optional<Author> author = authorRepository.findById(id);
         AuthorDto authorDto = Author.toDto(author.orElse(new Author()));
         model.addAttribute("author", authorDto);
-        model.addAttribute("books", authorBooks);
         return "author";
     }
 }

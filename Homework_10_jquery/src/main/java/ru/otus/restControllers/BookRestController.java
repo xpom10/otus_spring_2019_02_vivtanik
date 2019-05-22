@@ -25,7 +25,7 @@ public class BookRestController {
     }
 
     @GetMapping("/api/{authorId}/books")
-    public List<BookDto> getBooks(@PathVariable String authorId) {
+    public List<BookDto> getAuthorBooks(@PathVariable String authorId) {
         return bookRepository.findBookByAuthor_Id(authorId).stream().map(Book::toDto).collect(Collectors.toList());
     }
 

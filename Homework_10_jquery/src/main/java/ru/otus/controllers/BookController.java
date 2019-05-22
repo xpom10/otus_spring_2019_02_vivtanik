@@ -34,7 +34,7 @@ public class BookController {
     private final BookRepository bookRepository;
 
     @GetMapping({"/", "/books"})
-    public String getBooks() {
+    public String getBooksView() {
         return "books";
     }
 

@@ -28,7 +28,7 @@
         <th>Удалить</th>
     </tr>
     </thead>
-    <tbody id="booksBody">
+    <tbody id="books-id">
     </tbody>
 </table>
 <button><a th:href="@{/add}" href="add.html">Добавить книгу</a></button>
@@ -38,7 +38,7 @@
     $(function () {
         $.get('/api/books').done(function (books) {
             books.forEach(function (books) {
-                $('tbody#booksBody').append(`
+                $('tbody#books-id').append(`
                     <tr>
                         <td><a href="/book?id=${books.id}">${books.title}</a></td>
                         <td>${books.genreName}</td>
