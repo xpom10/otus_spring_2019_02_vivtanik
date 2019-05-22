@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+    </style>
+</head>
+<body>
+<h1>Новая книга:</h1>
+<form action="#" th:action="@{/add}" th:object="${book}" method="post">
+    <p>
+        <label>Название книги:
+            <input type="text" th:field="${book.title}"/>
+        </label>
+            <span th:if="${#fields.hasErrors('title')}" th:errors="${book.title}"></span></p>
+    <p>
+        <label>Автор:
+            <input type="text" th:field="*{author.authorName}" list="authors"/>
+        </label>
+        <datalist id="authors">
+            <option th:each="author : ${authors}" th:value="${author.authorName}"></option>
+        </datalist>
+            <span th:if="${#fields.hasErrors('author.authorName')}" th:errors="*{author.authorName}"></span></p>
+    <p>
+        <label>Жанр:
+            <input type="text" th:field="*{genreName}" list="genres"/>
+        </label>
+        <datalist id="genres">
+            <option th:each="genre : ${genres}" th:value="${genre.genreName}"></option>
+        </datalist>
+            <span th:if="${#fields.hasErrors('genreName')}" th:errors="*{genreName}"></span></p>
+    <p>
+        <button type="submit">Сохранить</button>
+        <button type="reset" onclick="window.location='/books'">Отмена</button>
+    </p>
+</form>
+
+</body>
+</html>

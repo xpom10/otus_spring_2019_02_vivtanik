@@ -34,9 +34,7 @@ public class BookController {
     private final BookRepository bookRepository;
 
     @GetMapping({"/", "/books"})
-    public String getBooks(Model model) {
-        List<BookDto> books = bookRepository.findAll().stream().map(Book::toDto).collect(Collectors.toList());
-        model.addAttribute("books", books);
+    public String getBooks() {
         return "books";
     }
 

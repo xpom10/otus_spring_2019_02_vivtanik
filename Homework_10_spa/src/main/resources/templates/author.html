@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${author.authorName}">Автор</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<h1 th:text="${author.authorName}">Автор</h1>
+<p>Книги автора:</p>
+<ol>
+</ol>
+<button>
+    <a th:href="@{/books}" href="books.html">К списку книг</a>
+</button>
+
+<script>
+
+    $(function () {
+        $.get('/api/${authorId}/books').done(function (books) {
+            books.forEach(function (books) {
+                $('ol').append(`
+                    <li><a value="${books.title}" href="/book?id=${books.id}">Заголовок книги</a></li>
+                `);
+            });
+        })
+    });
+
+</script>
+
+</body>
+</html>
