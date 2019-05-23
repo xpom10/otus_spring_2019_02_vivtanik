@@ -39,14 +39,13 @@ public class BookController {
     }
 
     @GetMapping("/book")
-    public ModelAndView getBook(@RequestParam String id, ModelAndView modelAndView) {
-        Optional<Book> book = bookRepository.findById(id);
-        BookDto bookDto = Book.toDto(book.orElse(new Book()));
-
-        modelAndView.addObject("book", bookDto);
-        modelAndView.addObject("comment", new CommentDto());
-        modelAndView.setViewName("book");
-        return modelAndView;
+    public String getBookView(@RequestParam String id, Model model) {
+//        Optional<Book> book = bookRepository.findById(id);
+//        BookDto bookDto = Book.toDto(book.orElse(new Book()));
+//
+//        model.addAttribute("book", bookDto);
+//        model.addAttribute("comment", new CommentDto());
+        return "book";
     }
 
     @PostMapping(value = "/comment", produces = "application/json")

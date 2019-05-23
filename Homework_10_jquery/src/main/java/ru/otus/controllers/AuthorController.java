@@ -24,10 +24,7 @@ public class AuthorController {
     private final AuthorRepository authorRepository;
 
     @GetMapping("/author")
-    public String getAuthor(@RequestParam String id, Model model) {
-        Optional<Author> author = authorRepository.findById(id);
-        AuthorDto authorDto = Author.toDto(author.orElse(new Author()));
-        model.addAttribute("author", authorDto);
+    public String getAuthorView() {
         return "author";
     }
 }

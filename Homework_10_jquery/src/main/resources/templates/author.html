@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${author.authorName}">Автор</title>
+    <title>Страница Автора</title>
     <style type="text/css">
         body {
             padding: 50px;
@@ -16,7 +16,7 @@
     <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-<h1 th:text="${author.authorName}">Автор</h1>
+<div id="author-id"></div>
 <p>Книги автора:</p>
 <ol id="comments-id">
 </ol>
@@ -27,7 +27,15 @@
 <script>
 
     $(function () {
-        $.get('/api/[[${author.id}]]/books').done(function (books) {
+        const authorId = window.location.search;
+        $.get('/api/author' + authorId).done(function (author) {
+            $('div#author-id').append(`<h1>${author.authorName}</h1>`)
+        })
+    });
+
+    $(function () {
+        const authorId = window.location.search;
+        $.get('/api/authorbooks' + authorId).done(function (books) {
             books.forEach(function (books) {
                 $('ol#comments-id').append(`
                     <li><a href="/book?id=${books.id}">${books.title}</a></li>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title th:text="${book.title}">Книга</title>
+    <title>Книга</title>
     <style type="text/css">
         body {
             padding: 50px;
@@ -13,15 +13,13 @@
             padding: 5px;
         }
     </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <div>
-    <h1 th:text="${book.title}">Заголовок книги</h1>
-    <h2 th:text="${book.author.authorName}">Автор</h2>
-    <p th:if="!${book.comments.isEmpty()}">Комментарии к книге:</p>
-    <ul th:each="comment : ${book.comments}">
-        <li th:text="${comment}">Комментарий</li>
-    </ul>
+    <div id="main-book">
+    </div>
+
 
     <form action="#" th:action="@{/comment(id=${book.id})}" th:object="${comment}" method="post">
         <p>Добавить комментарий:
@@ -37,5 +35,32 @@
         <a th:href="@{/books}" href="books.html">К списку книг</a>
     </button>
 </div>
+
+<script>
+
+    $.ajax({
+
+    });
+
+    $(function () {
+        const bookId = window.location.search;
+        $.get('/api/book' + bookId).done(function (book) {
+            $('div#main-book').append(`
+                    <h1>${book.title}</h1>
+                    <h2>${book.author.authorName}</h2>
+                    <ul id="comments-id"></ul>
+                `);
+            if (book.comments.length > 0) {
+                book.comments.forEach(function (comment) {
+                    $('ul#comments-id').append(`
+                    <li>${comment}</li>
+                    `)
+                })
+            }
+        });
+    });
+
+</script>
+
 </body>
 </html>
