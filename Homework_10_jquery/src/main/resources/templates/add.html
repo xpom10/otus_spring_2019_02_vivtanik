@@ -8,36 +8,74 @@
             padding: 50px;
         }
     </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <h1>Новая книга:</h1>
-<form action="#" th:action="@{/add}" th:object="${book}" method="post">
+<form id="book-form-id" action="/api/add" method="post">
     <p>
         <label>Название книги:
-            <input type="text" th:field="${book.title}"/>
+            <input id="title-input-id" type="text"/>
         </label>
-            <span th:if="${#fields.hasErrors('title')}" th:errors="${book.title}"></span></p>
     <p>
         <label>Автор:
-            <input type="text" th:field="*{author.authorName}" list="authors"/>
+            <input id="author-input-id" type="text" list="authors"/>
         </label>
         <datalist id="authors">
-            <option th:each="author : ${authors}" th:value="${author.authorName}"></option>
         </datalist>
-            <span th:if="${#fields.hasErrors('author.authorName')}" th:errors="*{author.authorName}"></span></p>
     <p>
         <label>Жанр:
-            <input type="text" th:field="*{genreName}" list="genres"/>
+            <input id="genre-input-id" type="text" list="genres"/>
         </label>
         <datalist id="genres">
-            <option th:each="genre : ${genres}" th:value="${genre.genreName}"></option>
         </datalist>
-            <span th:if="${#fields.hasErrors('genreName')}" th:errors="*{genreName}"></span></p>
     <p>
-        <button type="submit">Сохранить</button>
-        <button type="reset" onclick="window.location='/books'">Отмена</button>
+        <input type="submit" value="Сохранить"/>
+        <input type="reset" onclick="window.location='/books'" value="Отмена"/>
     </p>
 </form>
+
+<script>
+
+    $(function () {
+        $.get('/api/authors').done(function (authors) {
+            authors.forEach(function (author) {
+                $('datalist#authors').append(`
+                <option value="${author.authorName}"></option>
+                `);
+            });
+        })
+    });
+
+    $(function () {
+        $.get('/api/genres').done(function (genres) {
+            genres.forEach(function (genre) {
+                $('datalist#genres').append(`
+                <option value="${genre.genreName}"></option>
+                `);
+            });
+        })
+    });
+
+    $('form#book-form-id').submit(function (e) {
+        e.preventDefault();
+        var $form = $(this), url = $form.attr('action');
+        var data = {
+            title: $('#title-input-id').val(),
+            author: {authorName: $('#author-input-id').val()},
+            genreName: $('#genre-input-id').val()
+        };
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json'
+        })
+        // posting.done(window.location.replace('/books'));
+    });
+
+</script>
 
 </body>
 </html>

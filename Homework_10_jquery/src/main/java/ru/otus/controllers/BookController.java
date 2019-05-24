@@ -40,34 +40,11 @@ public class BookController {
 
     @GetMapping("/book")
     public String getBookView(@RequestParam String id, Model model) {
-//        Optional<Book> book = bookRepository.findById(id);
-//        BookDto bookDto = Book.toDto(book.orElse(new Book()));
-//
-//        model.addAttribute("book", bookDto);
-//        model.addAttribute("comment", new CommentDto());
         return "book";
-    }
-
-    @PostMapping(value = "/comment", produces = "application/json")
-    public String addComment(@RequestParam(required = false) String id, @ModelAttribute("comment") @Valid CommentDto commentDto, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            Optional<Book> book = bookRepository.findById(id);
-            BookDto bookDto = Book.toDto(book.orElse(new Book()));
-            model.addAttribute("book", bookDto);
-            return "book";
-        }
-        Comment addComment = new Comment(commentDto.comment);
-        bookRepository.addComment(id, addComment);
-        return String.format("redirect:/book?id=%s", id);
     }
 
     @GetMapping("/edit")
     public String editBook(@RequestParam String id, Model model) {
-        List<AuthorDto> authors = authorRepository.findAll().stream().map(Author::toDto).collect(Collectors.toList());
-        List<GenreDto> genres = bookRepository.findGenres().stream().map(Genre::toDto).collect(Collectors.toList());
-        model.addAttribute("authors", authors);
-        model.addAttribute("genres", genres);
-
         Optional<Book> book = bookRepository.findById(id);
         BookDto bookDto = Book.toDto(book.orElse(new Book()));
         model.addAttribute("book", bookDto);
@@ -85,12 +62,7 @@ public class BookController {
     }
 
     @GetMapping("/add")
-    public String addBook(Model model) {
-        List<AuthorDto> authors = authorRepository.findAll().stream().map(Author::toDto).collect(Collectors.toList());
-        List<GenreDto> genres = bookRepository.findGenres().stream().map(Genre::toDto).collect(Collectors.toList());
-        model.addAttribute("book", new BookDto());
-        model.addAttribute("authors", authors);
-        model.addAttribute("genres", genres);
+    public String addBookView() {
         return "add";
     }
 

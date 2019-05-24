@@ -8,6 +8,7 @@
             padding: 50px;
         }
     </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <h1>Редактирование книги:</h1>
@@ -24,22 +25,42 @@
                    list="authors"/>
         </label>
         <datalist id="authors">
-            <option th:each="author : ${authors}" th:value="${author.authorName}"></option>
         </datalist>
-            <span th:if="${#fields.hasErrors('author.authorName')}" th:errors="*{author.authorName}"></span></p>
     <p>
         <label>Жанр:
             <input type="text" th:field="*{genreName}" th:value="*{genreName}" value="Жанр" list="genres"/>
         </label>
         <datalist id="genres">
-            <option th:each="genre : ${genres}" th:value="${genre.genreName}"></option>
         </datalist>
-            <span th:if="${#fields.hasErrors('genreName')}" th:errors="*{genreName}"></span></p>
     <p>
         <button type="submit">Сохранить</button>
         <button type="reset" onclick="window.location='/books'">Отмена</button>
     </p>
 </form>
+
+<script>
+
+    $(function () {
+        $.get('/api/authors').done(function (authors) {
+            authors.forEach(function (author) {
+                $('datalist#authors').append(`
+                <option value="${author.authorName}"></option>
+                `);
+            });
+        })
+    });
+
+    $(function () {
+        $.get('/api/genres').done(function (genres) {
+            genres.forEach(function (genre) {
+                $('datalist#genres').append(`
+                <option value="${genre.genreName}"></option>
+                `);
+            });
+        })
+    });
+
+</script>
 
 </body>
 </html>
