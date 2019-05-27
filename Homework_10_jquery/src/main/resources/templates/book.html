@@ -14,6 +14,7 @@
         }
     </style>
     <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script src="webjars/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script>
 </head>
 <body>
 <div>
@@ -23,7 +24,8 @@
 
     <form action="/api/comment" id="comment-form-id" method="post">
         <p>Добавить комментарий:
-            <label for="comment-input-id"></label><input id="comment-input-id" type="text"/>
+            <label for="comment-input-id"></label>
+            <input id="comment-input-id" type="text" required="required" minlength="0"/>
         </p>
         <p>
             <input type="submit" value="Добавить комментарий">
@@ -66,18 +68,12 @@
         var $form = $(this), url = $form.attr('action') + window.location.search;
         var posting = $.post(url, {comment: $('#comment-input-id').val()});
         posting.done(function (data) {
-                if (data != null) {
-                    $('span#comment-error').empty();
-                    $('li#empty-comment-id').detach();
-                    $('ul#comments-id').append(`
+                $('span#comment-error').empty();
+                $('li#empty-comment-id').detach();
+                $('ul#comments-id').append(`
                     <li>${data.comment}</li>
                     `);
-                    $('input#comment-input-id').val("");
-                } else {
-                    $('span#comment-error').empty().append(`
-                    <span id="err-id">Комментарий не может быть пустым, заполните пожалуйста</span>
-                    `)
-                }
+                $('input#comment-input-id').val("");
             }
         )
         ;

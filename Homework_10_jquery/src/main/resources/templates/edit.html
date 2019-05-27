@@ -9,23 +9,24 @@
         }
     </style>
     <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script src="webjars/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script>
 </head>
 <body>
 <h1>Редактирование книги:</h1>
 <form id="book-form-id" action="/api/editbook" method="post">
     <p>
         <label>Название книги:
-            <input id="title-input-id" type="text"/>
+            <input id="title-input-id" type="text" name="title-name" required="required" minlength="0"/>
         </label>
     <p>
         <label>Автор:
-            <input id="author-input-id" type="text" list="authors"/>
+            <input id="author-input-id" type="text" list="authors" required="required" minlength="0"/>
         </label>
         <datalist id="authors">
         </datalist>
     <p>
         <label>Жанр:
-            <input id="genre-input-id" type="text" list="genres"/>
+            <input id="genre-input-id" type="text" list="genres" required="required" minlength="0"/>
         </label>
         <datalist id="genres">
         </datalist>
@@ -36,6 +37,7 @@
 </form>
 
 <script>
+
 
     $(function () {
         $.get('/api/authors').done(function (authors) {
@@ -57,6 +59,14 @@
         })
     });
 
+    $(function () {
+        $.get('/api/book' + window.location.search).done(function (book) {
+            $('input#title-input-id').val(book.title);
+            $('input#author-input-id').val(book.author.authorName);
+            $('input#genre-input-id').val(book.genreName);
+        });
+    });
+
     $('form#book-form-id').submit(function (e) {
         e.preventDefault();
         var $form = $(this), url = $form.attr('action') + window.location.search;
@@ -65,14 +75,14 @@
             author: {authorName: $('#author-input-id').val()},
             genreName: $('#genre-input-id').val()
         };
-        $.ajax({
+        var posting = $.ajax({
             url: url,
-            type: 'POST',
+            type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(data),
             dataType: 'json'
         });
-        posting.done(window.location.replace('/books'));
+        posting.done(window.location.replace("/books"))
     });
 
 </script>

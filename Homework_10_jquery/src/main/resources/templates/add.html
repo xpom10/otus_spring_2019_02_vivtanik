@@ -9,23 +9,24 @@
         }
     </style>
     <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script src="webjars/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script>
 </head>
 <body>
 <h1>Новая книга:</h1>
 <form id="book-form-id" action="/api/add" method="post">
     <p>
         <label>Название книги:
-            <input id="title-input-id" type="text"/>
+            <input id="title-input-id" type="text" required="required" minlength="0"/>
         </label>
     <p>
         <label>Автор:
-            <input id="author-input-id" type="text" list="authors"/>
+            <input id="author-input-id" type="text" list="authors" required="required" minlength="0"/>
         </label>
         <datalist id="authors">
         </datalist>
     <p>
         <label>Жанр:
-            <input id="genre-input-id" type="text" list="genres"/>
+            <input id="genre-input-id" type="text" list="genres" required="required" minlength="0"/>
         </label>
         <datalist id="genres">
         </datalist>
@@ -71,8 +72,7 @@
             contentType: 'application/json',
             data: JSON.stringify(data),
             dataType: 'json'
-        })
-         posting.done(window.location.replace('/books'));
+        }).done(window.location = "/books");
     });
 
 </script>

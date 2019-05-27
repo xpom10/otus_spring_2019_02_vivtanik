@@ -28,10 +28,12 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
-public class BookController {
+public class ViewController {
 
-    private final AuthorRepository authorRepository;
-    private final BookRepository bookRepository;
+    @GetMapping("/author")
+    public String getAuthorView() {
+        return "author";
+    }
 
     @GetMapping({"/", "/books"})
     public String getBooksView() {
@@ -39,26 +41,13 @@ public class BookController {
     }
 
     @GetMapping("/book")
-    public String getBookView(@RequestParam String id, Model model) {
+    public String getBookView() {
         return "book";
     }
 
     @GetMapping("/edit")
-    public String editBook(@RequestParam String id, Model model) {
-        Optional<Book> book = bookRepository.findById(id);
-        BookDto bookDto = Book.toDto(book.orElse(new Book()));
-        model.addAttribute("book", bookDto);
+    public String editBook() {
         return "edit";
-    }
-
-    @PostMapping(value = "/edit", produces = "application/json")
-    public String editBook(@ModelAttribute("book") @Valid BookDto bookDto, BindingResult result) {
-        if (result.hasErrors()) {
-            return "edit";
-        }
-        Book book = Book.fromDto(bookDto);
-        bookRepository.save(book);
-        return "redirect:/books";
     }
 
     @GetMapping("/add")
@@ -66,19 +55,4 @@ public class BookController {
         return "add";
     }
 
-    @PostMapping(value = "/add", produces = "application/json")
-    public String addBook(@ModelAttribute("book") @Valid BookDto bookDto, BindingResult result) {
-        if (result.hasErrors()) {
-            return "add";
-        }
-        Book book = Book.fromDto(bookDto);
-        bookRepository.save(book);
-        return "redirect:/books";
-    }
-
-    @PostMapping("/delete")
-    public String deleteBook(@RequestParam String id) {
-        bookRepository.deleteById(id);
-        return "redirect:/books";
-    }
 }

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
-public class BookRestController {
+public class RestRepositoryController {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
@@ -81,12 +81,21 @@ public class BookRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookDto);
     }
 
-    @PutMapping(value = "/api/editbook")
-    public ResponseEntity<BookDto> editBook(@RequestParam String id, @ModelAttribute("book") BookDto bookDto, BindingResult result) {
+    @PutMapping(value = "/api/editbook", produces = "application/json")
+    public ResponseEntity<BookDto> editBook(@RequestParam String id, @RequestBody @Valid BookDto bookDto, BindingResult result) {
         if (result.hasErrors()) {
-            return null;
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-        return null;
+        Book book = Book.fromDto(bookDto);
+        book.setId(id);
+        bookRepository.save(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Book.toDto(book));
+    }
+
+    @DeleteMapping("/api/delete")
+    public ResponseEntity<?> deleteBook(@RequestParam String id) {
+        bookRepository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

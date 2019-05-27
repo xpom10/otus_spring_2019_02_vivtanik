@@ -35,25 +35,49 @@
 
 <script>
 
-    $(function () {
-        $.get('/api/books').done(function (books) {
-            books.forEach(function (books) {
-                $('tbody#books-id').append(`
+    window.onload = showBooks();
+
+    function showBooks() {
+        $(function showBooks() {
+            $.get('/api/books').done(function (books) {
+                books.forEach(function (book) {
+                    $('tbody#books-id').append(`
                     <tr>
-                        <td><a href="/book?id=${books.id}">${books.title}</a></td>
-                        <td>${books.genreName}</td>
-                        <td><a href="/author?id=${books.author.id}">${books.author.authorName}</a></td>
-                        <td><button><a href="/edit?id=${books.id}">Редактировать</a></button></td>
+                        <td><a href="/book?id=${book.id}">${book.title}</a></td>
+                        <td>${book.genreName}</td>
+                        <td><a href="/author?id=${book.author.id}">${book.author.authorName}</a></td>
+                        <td><button><a href="/edit?id=${book.id}">Редактировать</a></button></td>
                         <td>
-                            <form action="/delete?id=${books.id}" method="post">
-                            <button type="submit" onClick="return confirm('Уверен, что хочешь удалить книгу?')">Удалить</button>
+                            <form id="delete-form-id" action="/api/delete?id=${book.id}" method="post">
+                            <input type="submit"  value="Удалить" onClick="return deleteBook()"/>
                             </form>
                         </td>
                     </tr>
                 `);
+                });
+            })
+        });
+    }
+
+    function deleteBook() {
+        if (confirm('Уверен, что хочешь удалить книгу?')) {
+            $('form#delete-form-id').submit(function (e) {
+                e.preventDefault();
+                var $form = $(this), url = $form.attr('action');
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    success: function () {
+                        $('tbody#books-id').empty();
+                        showBooks()
+                    }
+                });
             });
-        })
-    });
+            return true;
+        } else
+            return false;
+    }
+
 
 </script>
 </body>
