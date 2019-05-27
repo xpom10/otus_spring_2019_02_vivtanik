@@ -12,29 +12,26 @@
 </head>
 <body>
 <h1>Редактирование книги:</h1>
-<form action="#" th:action="@{/edit(id=${book.id})}" th:object="${book}" method="post">
+<form id="book-form-id" action="/api/editbook" method="post">
     <p>
-        <label>
-            Название книги:
-            <input type="text" th:field="*{title}" th:value="*{title}" value="Название книги"/>
+        <label>Название книги:
+            <input id="title-input-id" type="text"/>
         </label>
-            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span></p>
     <p>
         <label>Автор:
-            <input type="text" th:field="*{author.authorName}" th:value="*{author.authorName}" value="Автор"
-                   list="authors"/>
+            <input id="author-input-id" type="text" list="authors"/>
         </label>
         <datalist id="authors">
         </datalist>
     <p>
         <label>Жанр:
-            <input type="text" th:field="*{genreName}" th:value="*{genreName}" value="Жанр" list="genres"/>
+            <input id="genre-input-id" type="text" list="genres"/>
         </label>
         <datalist id="genres">
         </datalist>
     <p>
-        <button type="submit">Сохранить</button>
-        <button type="reset" onclick="window.location='/books'">Отмена</button>
+        <input type="submit" value="Сохранить"/>
+        <input type="reset" onclick="window.location='/books'" value="Отмена"/>
     </p>
 </form>
 
@@ -58,6 +55,24 @@
                 `);
             });
         })
+    });
+
+    $('form#book-form-id').submit(function (e) {
+        e.preventDefault();
+        var $form = $(this), url = $form.attr('action') + window.location.search;
+        var data = {
+            title: $('#title-input-id').val(),
+            author: {authorName: $('#author-input-id').val()},
+            genreName: $('#genre-input-id').val()
+        };
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json'
+        });
+        posting.done(window.location.replace('/books'));
     });
 
 </script>
