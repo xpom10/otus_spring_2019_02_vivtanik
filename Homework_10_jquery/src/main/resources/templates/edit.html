@@ -13,7 +13,7 @@
 </head>
 <body>
 <h1>Редактирование книги:</h1>
-<form id="book-form-id" action="/api/editbook" method="post">
+<form id="book-form-id" action="/api/books/" method="post">
     <p>
         <label>Название книги:
             <input id="title-input-id" type="text" name="title-name" required="required" minlength="0"/>
@@ -50,7 +50,7 @@
     });
 
     $(function () {
-        $.get('/api/genres').done(function (genres) {
+        $.get('/api/books/genres').done(function (genres) {
             genres.forEach(function (genre) {
                 $('datalist#genres').append(`
                 <option value="${genre.genreName}"></option>
@@ -59,8 +59,15 @@
         })
     });
 
+    $.urlParam = function (name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)')
+            .exec(window.location.search);
+
+        return (results !== null) ? results[1] || 0 : false;
+    };
+
     $(function () {
-        $.get('/api/book' + window.location.search).done(function (book) {
+        $.get('/api/books/' + $.urlParam('id')).done(function (book) {
             $('input#title-input-id').val(book.title);
             $('input#author-input-id').val(book.author.authorName);
             $('input#genre-input-id').val(book.genreName);
@@ -69,7 +76,7 @@
 
     $('form#book-form-id').submit(function (e) {
         e.preventDefault();
-        var $form = $(this), url = $form.attr('action') + window.location.search;
+        var $form = $(this), url = $form.attr('action') + $.urlParam('id');
         var data = {
             title: $('#title-input-id').val(),
             author: {authorName: $('#author-input-id').val()},

@@ -37,6 +37,13 @@
 
     window.onload = showBooks();
 
+    $.urlParam = function (name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)')
+            .exec(window.location.search);
+
+        return (results !== null) ? results[1] || 0 : false;
+    };
+
     function showBooks() {
         $(function showBooks() {
             $.get('/api/books').done(function (books) {
@@ -48,7 +55,7 @@
                         <td><a href="/author?id=${book.author.id}">${book.author.authorName}</a></td>
                         <td><button><a href="/edit?id=${book.id}">Редактировать</a></button></td>
                         <td>
-                            <form id="delete-form-id" action="/api/delete?id=${book.id}" method="post">
+                            <form id="delete-form-id" action="/api/books/${book.id}" method="post">
                             <input type="submit"  value="Удалить" onClick="return deleteBook()"/>
                             </form>
                         </td>

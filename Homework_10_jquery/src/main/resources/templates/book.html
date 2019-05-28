@@ -22,7 +22,7 @@
     </div>
 
 
-    <form action="/api/comment" id="comment-form-id" method="post">
+    <form action="/api/books/" id="comment-form-id" method="post">
         <p>Добавить комментарий:
             <label for="comment-input-id"></label>
             <input id="comment-input-id" type="text" required="required" minlength="0"/>
@@ -40,9 +40,16 @@
 
 <script>
 
+    $.urlParam = function (name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)')
+            .exec(window.location.search);
+
+        return (results !== null) ? results[1] || 0 : false;
+    };
+
     $(function () {
-        const bookId = window.location.search;
-        $.get('/api/book' + bookId).done(function (book) {
+        const bookId = $.urlParam('id');
+        $.get('/api/books/' + bookId).done(function (book) {
             $('div#main-book').append(`
                     <h1>${book.title}</h1>
                     <h2>${book.author.authorName}</h2>
@@ -65,7 +72,7 @@
 
     $('form#comment-form-id').submit(function (e) {
         e.preventDefault();
-        var $form = $(this), url = $form.attr('action') + window.location.search;
+        var $form = $(this), url = $form.attr('action') + $.urlParam('id') + '/comment';
         var posting = $.post(url, {comment: $('#comment-input-id').val()});
         posting.done(function (data) {
                 $('span#comment-error').empty();

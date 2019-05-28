@@ -13,7 +13,7 @@
 </head>
 <body>
 <h1>Новая книга:</h1>
-<form id="book-form-id" action="/api/add" method="post">
+<form id="book-form-id" action="/api/books" method="post">
     <p>
         <label>Название книги:
             <input id="title-input-id" type="text" required="required" minlength="0"/>
@@ -39,7 +39,7 @@
 <script>
 
     $(function () {
-        $.get('/api/authors').done(function (authors) {
+        $.get('/api/authors/').done(function (authors) {
             authors.forEach(function (author) {
                 $('datalist#authors').append(`
                 <option value="${author.authorName}"></option>
@@ -49,7 +49,7 @@
     });
 
     $(function () {
-        $.get('/api/genres').done(function (genres) {
+        $.get('/api/books/genres/').done(function (genres) {
             genres.forEach(function (genre) {
                 $('datalist#genres').append(`
                 <option value="${genre.genreName}"></option>

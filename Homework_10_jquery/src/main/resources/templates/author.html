@@ -26,16 +26,23 @@
 
 <script>
 
+    $.urlParam = function (name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)')
+            .exec(window.location.search);
+
+        return (results !== null) ? results[1] || 0 : false;
+    };
+
     $(function () {
-        const authorId = window.location.search;
-        $.get('/api/author' + authorId).done(function (author) {
+        const authorId = $.urlParam('id');
+        $.get('/api/authors/' + authorId).done(function (author) {
             $('div#author-id').append(`<h1>${author.authorName}</h1>`)
         })
     });
 
     $(function () {
-        const authorId = window.location.search;
-        $.get('/api/authorbooks' + authorId).done(function (books) {
+        const authorId = $.urlParam('id');
+        $.get('/api/books/author/' + authorId).done(function (books) {
             books.forEach(function (books) {
                 $('ol#comments-id').append(`
                     <li><a href="/book?id=${books.id}">${books.title}</a></li>
