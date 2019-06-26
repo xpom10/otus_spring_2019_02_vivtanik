@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
-public class BookRestRepository {
+public class BookRestController {
 
     private final BookRepository bookRepository;
 

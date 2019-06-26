@@ -1,22 +1,17 @@
 package ru.otus.restControllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Genre;
@@ -30,14 +25,13 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(RestRepositoryController.class)
-public class RestRepositoryControllerTests {
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(BookRestController.class)
+public class BookRestControllerTests {
 
     @Autowired
     private MockMvc mvc;
@@ -49,7 +43,7 @@ public class RestRepositoryControllerTests {
     private AuthorRepository authorRepository;
 
     @Test
-    public void testBooks() throws Exception {
+    void testBooks() throws Exception {
         Mockito.when(bookRepository.findAll())
                 .thenReturn(Arrays.asList(
                         new Book("1", "title", new Genre("genre"), new Author("author")),
@@ -70,24 +64,12 @@ public class RestRepositoryControllerTests {
                 .thenReturn(Optional.of(
                         new Book("1", "title", new Genre("genre"), new Author("author"))
                 ));
-        mvc.perform(get("/api/book?id=1"))
+        mvc.perform(get("/api/books/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is("1")))
                 .andExpect(jsonPath("title", is("title")))
                 .andExpect(jsonPath("genreName", is("genre")))
                 .andExpect(jsonPath("author.authorName", is("author")));
-    }
-
-    @Test
-    public void testAuthor() throws Exception {
-        Mockito.when(authorRepository.findById("1"))
-                .thenReturn(Optional.of(
-                        new Author("1", "author")
-                ));
-        mvc.perform(get("/api/author?id=1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id", is("1")))
-                .andExpect(jsonPath("authorName", is("author")));
     }
 
     @Test
@@ -97,26 +79,13 @@ public class RestRepositoryControllerTests {
                         new Genre("genre"),
                         new Genre("genre2"))
                 );
-        mvc.perform(get("/api/genres"))
+        mvc.perform(get("/api/books/genres"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].genreName", is("genre")))
                 .andExpect(jsonPath("$[1].genreName", is("genre2")))
                 .andExpect(jsonPath("$", hasSize(2)));
     }
 
-    @Test
-    public void testAuthors() throws Exception {
-        Mockito.when(authorRepository.findAll())
-                .thenReturn(Arrays.asList(
-                        new Author("author"),
-                        new Author("author1"))
-                );
-        mvc.perform(get("/api/authors"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].authorName", is("author")))
-                .andExpect(jsonPath("$[1].authorName", is("author1")))
-                .andExpect(jsonPath("$", hasSize(2)));
-    }
 
     @Test
     public void testAuthorBooks() throws Exception {
@@ -125,7 +94,7 @@ public class RestRepositoryControllerTests {
                         new Book("1", "title", new Genre("genre"), new Author("1", "author")),
                         new Book("2", "title2", new Genre("genre2"), new Author("2", "author1"))
                 ));
-        mvc.perform(get("/api/authorbooks?id=1"))
+        mvc.perform(get("/api/books/author/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is("1")))
                 .andExpect(jsonPath("$[0].title", is("title")))
@@ -138,7 +107,7 @@ public class RestRepositoryControllerTests {
         Mockito.when(bookRepository.findById("1"))
                 .thenReturn(Optional.of(new Book("1", "book1", new Genre("genre1"), new Author("111", "author1"))));
 
-        mvc.perform(post("/api/comment?id=1").param("comment", "comment1"))
+        mvc.perform(post("/api/books/1/comment").param("comment", "comment1"))
                 .andExpect(status().is(201));
     }
 
@@ -151,7 +120,7 @@ public class RestRepositoryControllerTests {
         authorDto.setAuthorName("author");
         bookDto.setAuthor(authorDto);
 
-        mvc.perform(post("/api/add").contentType("application/json").content(new ObjectMapper().writeValueAsBytes(bookDto)))
+        mvc.perform(post("/api/books").contentType("application/json").content(new ObjectMapper().writeValueAsBytes(bookDto)))
                 .andExpect(status().is(201));
     }
 
@@ -166,7 +135,7 @@ public class RestRepositoryControllerTests {
         String body = new ObjectMapper().writeValueAsString(bookDto);
 
         MockHttpServletRequestBuilder builder =
-                MockMvcRequestBuilders.put("/api/editbook?id=1")
+                MockMvcRequestBuilders.put("/api/books/1")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -175,7 +144,6 @@ public class RestRepositoryControllerTests {
         mvc.perform(builder)
                 .andExpect(status().is(201));
     }
-
 
 
 }
