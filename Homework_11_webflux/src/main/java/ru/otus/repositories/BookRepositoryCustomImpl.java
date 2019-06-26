@@ -1,12 +1,15 @@
 package ru.otus.repositories;
 
 import com.mongodb.client.result.UpdateResult;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import reactor.core.publisher.Flux;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
@@ -16,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class BookRepositoryCustomImpl implements BookRepositoryCustom {
 
     private final MongoTemplate template;
@@ -29,13 +32,12 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
         return updateResult.getModifiedCount();
     }
 
-    //    TODO
     @Override
-    public List<Genre> findGenres() {
+    public Flux<Genre> findGenres() {
         Aggregation aggregation = newAggregation(project().and("genre.genreName").as("genre_name"));
-        return template.aggregate(aggregation, Book.class, Genre.class).getMappedResults()
+        return Flux.fromIterable(template.aggregate(aggregation, Book.class, Genre.class).getMappedResults()
                 .stream()
                 .distinct()
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 }

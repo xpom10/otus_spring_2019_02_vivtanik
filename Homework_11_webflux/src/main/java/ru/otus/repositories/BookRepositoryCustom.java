@@ -1,5 +1,6 @@
 package ru.otus.repositories;
 
+import reactor.core.publisher.Flux;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
 
@@ -9,6 +10,6 @@ public interface BookRepositoryCustom {
 
     long addComment(String id, Comment comment);
 
-    List<Genre> findGenres();
+    Flux<Genre> findGenres();
 
 }
