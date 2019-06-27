@@ -21,4 +21,8 @@ public class Comment {
         return new Comment(commentDto.comment);
     }
 
+    public static CommentDto toDto(Comment comment) {
+        return new CommentDto(comment.comment);
+    }
+
 }

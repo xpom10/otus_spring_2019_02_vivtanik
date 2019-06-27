@@ -73,7 +73,17 @@
     $('form#comment-form-id').submit(function (e) {
         e.preventDefault();
         var $form = $(this), url = $form.attr('action') + $.urlParam('id') + '/comment';
-        var posting = $.post(url, {comment: $('#comment-input-id').val()});
+        var data = {
+            comment: $('#comment-input-id').val()
+        };
+        var posting = $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json'
+        });
+
         posting.done(function (data) {
                 $('span#comment-error').empty();
                 $('li#empty-comment-id').detach();

@@ -86,10 +86,9 @@ public class BookRestController {
 
     @PostMapping(value = "/api/books/{id}/comment", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto addComment(@PathVariable String id, @Valid CommentDto comment) {
-        Comment addComment = Comment.fromDto(comment);
-        bookRepository.addComment(id, addComment);
-        return comment;
+    public Mono<CommentDto> addComment(@PathVariable String id, @RequestBody CommentDto comment) {
+        Comment c = Comment.fromDto(comment);
+        return bookRepository.addComment(id, c).map(Comment::toDto);
     }
 
     @GetMapping("/api/books/author/{id}")
