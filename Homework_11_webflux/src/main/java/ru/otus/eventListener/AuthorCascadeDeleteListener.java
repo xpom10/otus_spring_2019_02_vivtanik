@@ -22,6 +22,6 @@ public class AuthorCascadeDeleteListener extends AbstractMongoEventListener<Auth
         super.onAfterDelete(event);
         val source = event.getSource();
         val id = source.get("_id").toString();
-        bookRepository.deleteBookByAuthorId(id);
+        bookRepository.deleteBookByAuthorId(id).subscribe();
     }
 }
