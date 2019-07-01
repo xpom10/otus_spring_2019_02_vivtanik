@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
 @SpringBootApplication
-@EnableReactiveMongoRepositories
 public class SpringSecurityMain {
 
     public static void main(String[] args) {
