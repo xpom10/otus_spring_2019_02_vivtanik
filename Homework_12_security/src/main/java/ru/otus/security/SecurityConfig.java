@@ -1,5 +1,6 @@
 package ru.otus.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -11,9 +12,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.otus.security.service.MongoCustomDetailsService;
 
 @EnableWebSecurity
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final MongoCustomDetailsService mongoCustomDetailsService;
 
     @Override
     public void configure(WebSecurity web) {
@@ -36,8 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin").password("password").roles("ADMIN");
+        auth
+                .userDetailsService(mongoCustomDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Bean

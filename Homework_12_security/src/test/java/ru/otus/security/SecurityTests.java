@@ -24,8 +24,78 @@ public class SecurityTests {
             authorities = {"ROLE_ADMIN"}
     )
     @Test
-    public void testBooks() throws Exception {
+    void testBooks() throws Exception {
         mockMvc.perform(get("/books"))
                 .andExpect(status().isOk());
+    }
+
+    @WithMockUser(
+            username = "admin",
+            authorities = {"ROLE_ADMIN"}
+    )
+    @Test
+    void testBook() throws Exception {
+        mockMvc.perform(get("/book"))
+                .andExpect(status().isOk());
+    }
+
+    @WithMockUser(
+            username = "admin",
+            authorities = {"ROLE_ADMIN"}
+    )
+    @Test
+    void testAdd() throws Exception {
+        mockMvc.perform(get("/add"))
+                .andExpect(status().isOk());
+    }
+
+    @WithMockUser(
+            username = "admin",
+            authorities = {"ROLE_ADMIN"}
+    )
+    @Test
+    void testEdit() throws Exception {
+        mockMvc.perform(get("/edit"))
+                .andExpect(status().isOk());
+    }
+
+    @WithMockUser(
+            username = "admin",
+            authorities = {"ROLE_ADMIN"}
+    )
+    @Test
+    void testAuthor() throws Exception {
+        mockMvc.perform(get("/author"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testBooksUnauthorized() throws Exception {
+        mockMvc.perform(get("/books"))
+                .andExpect(status().is(401));
+    }
+
+    @Test
+    void testBookUnauthorized() throws Exception {
+        mockMvc.perform(get("/book"))
+                .andExpect(status().is(401));
+    }
+
+    @Test
+    void testAddUnauthorized() throws Exception {
+        mockMvc.perform(get("/add"))
+                .andExpect(status().is(401));
+    }
+
+    @Test
+    void testEditUnauthorized() throws Exception {
+        mockMvc.perform(get("/book"))
+                .andExpect(status().is(401));
+    }
+
+    @Test
+    void testAuthorUnauthorized() throws Exception {
+        mockMvc.perform(get("/book"))
+                .andExpect(status().is(401));
     }
 }

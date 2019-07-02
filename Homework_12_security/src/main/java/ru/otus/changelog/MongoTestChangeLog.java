@@ -9,6 +9,7 @@ import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
+import ru.otus.security.domain.User;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,13 +48,18 @@ public class MongoTestChangeLog {
         database.drop();
     }
 
-    @ChangeSet(author = "vivtanikmv", id = "init_authors", order = "001", runAlways = true)
+    @ChangeSet(author = "vivtanikmv", id = "init_users", order = "001", runAlways = true)
+    public void initUser(MongoTemplate template) {
+        template.save(new User("admin", "password", "ADMIN"));
+    }
+
+    @ChangeSet(author = "vivtanikmv", id = "init_authors", order = "002", runAlways = true)
     public void initAuthors(MongoTemplate template) {
         template.save(author1);
         template.save(author2);
     }
 
-    @ChangeSet(author = "vivtanikmv", id = "init_books", order = "002", runAlways = true)
+    @ChangeSet(author = "vivtanikmv", id = "init_books", order = "003", runAlways = true)
     public void initBooks(MongoTemplate template) {
         template.save(book1);
         template.save(book3);
