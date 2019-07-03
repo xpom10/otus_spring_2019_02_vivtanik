@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Document(collection = "users")
-public class User {
+public class LibraryUser {
 
     @Id
     @Field("username")
@@ -19,7 +19,7 @@ public class User {
     @Field("roles")
     private String[] roles;
 
-    public User(String username, String password, String... roles) {
+    public LibraryUser(String username, String password, String... roles) {
         this.username = username;
         this.password = password;
         this.roles = roles;

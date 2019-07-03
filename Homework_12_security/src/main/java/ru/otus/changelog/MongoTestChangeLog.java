@@ -9,7 +9,7 @@ import ru.otus.domain.Author;
 import ru.otus.domain.Book;
 import ru.otus.domain.Comment;
 import ru.otus.domain.Genre;
-import ru.otus.security.domain.User;
+import ru.otus.security.domain.LibraryUser;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +50,7 @@ public class MongoTestChangeLog {
 
     @ChangeSet(author = "vivtanikmv", id = "init_users", order = "001", runAlways = true)
     public void initUser(MongoTemplate template) {
-        template.save(new User("admin", "password", "ADMIN"));
+        template.save(new LibraryUser("admin", "password", "ADMIN"));
     }
 
     @ChangeSet(author = "vivtanikmv", id = "init_authors", order = "002", runAlways = true)
