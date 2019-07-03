@@ -24,10 +24,7 @@ public class MongoCustomDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<LibraryUser> optionalUser = repository.findById(username);
         return optionalUser
-                .map(libraryUser ->
-                        User.withUsername(libraryUser.getUsername())
-                                .password(NoOpPasswordEncoder.getInstance().encode(libraryUser.getPassword()))
-                                .roles(libraryUser.getRoles()).build())
+                .map(LibraryUser::toUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Username %s not found", username)));
     }
 }
