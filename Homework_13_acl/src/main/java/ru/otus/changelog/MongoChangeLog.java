@@ -51,6 +51,7 @@ public class MongoChangeLog {
     @ChangeSet(author = "vivtanikmv", id = "init_users", order = "001", runAlways = true)
     public void initUser(MongoTemplate template) {
         template.save(new LibraryUser("admin", "password", "ADMIN"));
+        template.save(new LibraryUser("user", "password", "USER"));
     }
 
     @ChangeSet(author = "vivtanikmv", id = "init_authors", order = "002", runAlways = true)
