@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование книги</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script src="webjars/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script>
+</head>
+<body>
+<h1>Редактирование книги:</h1>
+<form id="book-form-id" action="/api/books/" method="post">
+    <p>
+        <label>Название книги:
+            <input id="title-input-id" type="text" name="title-name" required="required" minlength="0"/>
+        </label>
+    <p>
+        <label>Автор:
+            <input id="author-input-id" type="text" list="authors" required="required" minlength="0"/>
+        </label>
+        <datalist id="authors">
+        </datalist>
+    <p>
+        <label>Жанр:
+            <input id="genre-input-id" type="text" list="genres" required="required" minlength="0"/>
+        </label>
+        <datalist id="genres">
+        </datalist>
+    <p>
+        <input type="submit" value="Сохранить"/>
+        <input type="reset" onclick="window.location='/books'" value="Отмена"/>
+    </p>
+</form>
+
+<script>
+
+
+    $(function () {
+        $.get('/api/authors').done(function (authors) {
+            authors.forEach(function (author) {
+                $('datalist#authors').append(`
+                <option value="${author.authorName}"></option>
+                `);
+            });
+        })
+    });
+
+    $(function () {
+        $.get('/api/books/genres').done(function (genres) {
+            genres.forEach(function (genre) {
+                $('datalist#genres').append(`
+                <option value="${genre.genreName}"></option>
+                `);
+            });
+        })
+    });
+
+    $.urlParam = function (name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)')
+            .exec(window.location.search);
+
+        return (results !== null) ? results[1] || 0 : false;
+    };
+
+    $(function () {
+        $.get('/api/books/' + $.urlParam('id')).done(function (book) {
+            $('input#title-input-id').val(book.title);
+            $('input#author-input-id').val(book.author.authorName);
+            $('input#genre-input-id').val(book.genreName);
+        });
+    });
+
+    $('form#book-form-id').submit(function (e) {
+        e.preventDefault();
+        var $form = $(this), url = $form.attr('action') + $.urlParam('id');
+        var data = {
+            title: $('#title-input-id').val(),
+            author: {authorName: $('#author-input-id').val()},
+            genreName: $('#genre-input-id').val()
+        };
+        var posting = $.ajax({
+            url: url,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json'
+        });
+        posting.done(window.location.replace("/books"))
+    });
+
+</script>
+
+</body>
+</html>
