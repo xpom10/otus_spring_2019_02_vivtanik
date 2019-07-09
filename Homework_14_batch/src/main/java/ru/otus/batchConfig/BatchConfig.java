@@ -1,9 +1,8 @@
 package ru.otus.batchConfig;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.*;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -19,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import ru.otus.batchConfig.listener.BatchProcessListener;
+import ru.otus.batchConfig.listener.BatchReadListener;
+import ru.otus.batchConfig.listener.BatchWriterListener;
 import ru.otus.domain.jdbc.BookAuthor;
 import ru.otus.domain.jdbc.BookGenre;
 import ru.otus.domain.jdbc.MigrationBook;
@@ -28,17 +30,18 @@ import ru.otus.mapper.MongoToJdbcService;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
-import java.util.List;
 
 @EnableBatchProcessing
 @Configuration
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class BatchConfig {
 
-    private Logger logger = LoggerFactory.getLogger(BatchConfig.class);
-
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
+
+    private final BatchReadListener readListener;
+    private final BatchProcessListener processListener;
+    private final BatchWriterListener writerListener;
 
     @Bean
     public ItemReader<Author> authorReader(MongoTemplate mongoTemplate) {
@@ -133,52 +136,9 @@ public class BatchConfig {
                 .reader(authorReader)
                 .processor(authorProcessor)
                 .writer(jdbcAuthorWriter)
-                .listener(new ItemReadListener() {
-                    @Override
-                    public void beforeRead() {
-                    }
-
-                    @Override
-                    public void afterRead(Object o) {
-                        logger.info("Read {}", o);
-                    }
-
-                    @Override
-                    public void onReadError(Exception e) {
-
-                    }
-                })
-                .listener(new ItemProcessListener() {
-                    @Override
-                    public void beforeProcess(Object o) {
-                        logger.info("Before convert {} class {}", o, o.getClass());
-                    }
-
-                    @Override
-                    public void afterProcess(Object o, Object o2) {
-                        logger.info("After convert from {} class {} to {} class {}", o, o.getClass(), o2, o2.getClass());
-                    }
-
-                    @Override
-                    public void onProcessError(Object o, Exception e) {
-
-                    }
-                })
-                .listener(new ItemWriteListener() {
-                    @Override
-                    public void beforeWrite(List list) {
-                        logger.info("Before write {}", list);
-                    }
-
-                    @Override
-                    public void afterWrite(List list) {
-                        logger.info("After write {}", list);
-                    }
-
-                    @Override
-                    public void onWriteError(Exception e, List list) {
-                    }
-                })
+                .listener(readListener)
+                .listener(processListener)
+                .listener(writerListener)
                 .build();
     }
 
@@ -190,52 +150,9 @@ public class BatchConfig {
                 .reader(genreReader)
                 .processor(genreProcessor)
                 .writer(jdbcGenreWriter)
-                .listener(new ItemReadListener() {
-                    @Override
-                    public void beforeRead() {
-                    }
-
-                    @Override
-                    public void afterRead(Object o) {
-                        logger.info("Read {}", o);
-                    }
-
-                    @Override
-                    public void onReadError(Exception e) {
-
-                    }
-                })
-                .listener(new ItemProcessListener() {
-                    @Override
-                    public void beforeProcess(Object o) {
-                        logger.info("Before convert {} class {}", o, o.getClass());
-                    }
-
-                    @Override
-                    public void afterProcess(Object o, Object o2) {
-                        logger.info("After convert from {} class {} to {} class {}", o, o.getClass(), o2, o2.getClass());
-                    }
-
-                    @Override
-                    public void onProcessError(Object o, Exception e) {
-
-                    }
-                })
-                .listener(new ItemWriteListener() {
-                    @Override
-                    public void beforeWrite(List list) {
-                        logger.info("Before write {}", list);
-                    }
-
-                    @Override
-                    public void afterWrite(List list) {
-                        logger.info("After write {}", list);
-                    }
-
-                    @Override
-                    public void onWriteError(Exception e, List list) {
-                    }
-                })
+                .listener(readListener)
+                .listener(processListener)
+                .listener(writerListener)
                 .build();
     }
 
@@ -247,54 +164,10 @@ public class BatchConfig {
                 .reader(bookReader)
                 .processor(bookProcessor)
                 .writer(jdbcBookWriter)
-                .listener(new ItemReadListener() {
-                    @Override
-                    public void beforeRead() {
-                    }
-
-                    @Override
-                    public void afterRead(Object o) {
-                        logger.info("Read {}", o);
-                    }
-
-                    @Override
-                    public void onReadError(Exception e) {
-
-                    }
-                })
-                .listener(new ItemProcessListener() {
-                    @Override
-                    public void beforeProcess(Object o) {
-                        logger.info("Before convert {} class {}", o, o.getClass());
-                    }
-
-                    @Override
-                    public void afterProcess(Object o, Object o2) {
-                        logger.info("After convert from {} class {} to {} class {}", o, o.getClass(), o2, o2.getClass());
-                    }
-
-                    @Override
-                    public void onProcessError(Object o, Exception e) {
-
-                    }
-                })
-                .listener(new ItemWriteListener() {
-                    @Override
-                    public void beforeWrite(List list) {
-                        logger.info("Before write {}", list);
-                    }
-
-                    @Override
-                    public void afterWrite(List list) {
-                        logger.info("After write {}", list);
-                    }
-
-                    @Override
-                    public void onWriteError(Exception e, List list) {
-                    }
-                })
+                .listener(readListener)
+                .listener(processListener)
+                .listener(writerListener)
                 .build();
     }
-
 
 }

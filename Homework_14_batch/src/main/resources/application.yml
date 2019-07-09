@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://msk1-cbox032.unix.nspk.ru:3306/library?useSSL=false&useUnicode=true&characterEncoding=UTF-8
-    username: dbprof
-    password: dbprof
+    url: jdbc:mysql://localhost:3306/library?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    username: admin
+    password: admin
     initialization-mode: always
   jpa:
     show-sql: true
