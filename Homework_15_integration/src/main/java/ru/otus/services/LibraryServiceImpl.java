@@ -2,6 +2,7 @@ package ru.otus.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.channel.DirectChannel;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,12 +17,26 @@ import ru.otus.dto.GenreDto;
 import ru.otus.repositories.AuthorRepository;
 import ru.otus.repositories.BookRepository;
 
+import javax.annotation.PostConstruct;
+
 @Service
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class LibraryServiceImpl implements LibraryService {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+
+    private final DirectChannel channel1;
+    private final DirectChannel channel2;
+
+    @PostConstruct
+    private void subscribeChannel2ToChannel1() {
+        channel1.subscribe(channel2::send);
+        channel2.subscribe(message -> {
+            BookDto bookDto = (BookDto) message.getPayload();
+            this.saveBook(bookDto).subscribe();
+        });
+    }
 
     @Override
     public Flux<BookDto> findBooks() {
