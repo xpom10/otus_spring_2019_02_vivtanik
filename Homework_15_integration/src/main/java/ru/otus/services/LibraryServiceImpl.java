@@ -17,8 +17,6 @@ import ru.otus.dto.GenreDto;
 import ru.otus.repositories.AuthorRepository;
 import ru.otus.repositories.BookRepository;
 
-import javax.annotation.PostConstruct;
-
 @Service
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class LibraryServiceImpl implements LibraryService {
@@ -28,15 +26,6 @@ public class LibraryServiceImpl implements LibraryService {
 
     private final DirectChannel channel1;
     private final DirectChannel channel2;
-
-    @PostConstruct
-    private void subscribeChannel2ToChannel1() {
-        channel1.subscribe(channel2::send);
-        channel2.subscribe(message -> {
-            BookDto bookDto = (BookDto) message.getPayload();
-            this.saveBook(bookDto).subscribe();
-        });
-    }
 
     @Override
     public Flux<BookDto> findBooks() {
