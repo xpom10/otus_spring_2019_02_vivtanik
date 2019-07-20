@@ -24,9 +24,6 @@ public class LibraryServiceImpl implements LibraryService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
 
-    private final DirectChannel channel1;
-    private final DirectChannel channel2;
-
     @Override
     public Flux<BookDto> findBooks() {
         return bookRepository.findAll().map(Book::toDto);
