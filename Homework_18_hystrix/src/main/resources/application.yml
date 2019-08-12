@@ -1,0 +1,38 @@
+spring:
+  data:
+    mongodb:
+      host: mongo
+      port: 27017
+      database: library
+  profiles:
+    active: dev
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+info:
+  app:
+    name: Spring library application
+    description: Sample application with actuator support
+logging:
+  file: log.txt
+  level:
+    root: info
+
+resilience4j.circuitbreaker:
+  config:
+    default:
+      ringBufferSizeInClosedState: 100
+      ringBufferSizeInHalfOpenState: 10
+      waitDurationInOpenState: 10000
+      failureRateThreshold: 60
+      eventConsumerBufferSize: 10
+      registerHealthIndicator: true
+  instances:
+    libraryGroup:
+      baseConfig: default
