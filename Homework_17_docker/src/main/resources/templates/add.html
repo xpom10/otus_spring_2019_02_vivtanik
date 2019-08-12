@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script src="webjars/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script>
+</head>
+<body>
+<h1>Новая книга:</h1>
+<form id="book-form-id" action="/api/books" method="post">
+    <p>
+        <label>Название книги:
+            <input id="title-input-id" type="text" required="required" minlength="0"/>
+        </label>
+    <p>
+        <label>Автор:
+            <input id="author-input-id" type="text" list="authors" required="required" minlength="0"/>
+        </label>
+        <datalist id="authors">
+        </datalist>
+    <p>
+        <label>Жанр:
+            <input id="genre-input-id" type="text" list="genres" required="required" minlength="0"/>
+        </label>
+        <datalist id="genres">
+        </datalist>
+    <p>
+        <input type="submit" value="Сохранить"/>
+        <input type="reset" onclick="window.location='/books'" value="Отмена"/>
+    </p>
+</form>
+
+<script>
+
+    $(function () {
+        $.get('/api/authors/').done(function (authors) {
+            authors.forEach(function (author) {
+                $('datalist#authors').append(`
+                <option value="${author.authorName}"></option>
+                `);
+            });
+        })
+    });
+
+    $(function () {
+        $.get('/api/books/genres/').done(function (genres) {
+            genres.forEach(function (genre) {
+                $('datalist#genres').append(`
+                <option value="${genre.genreName}"></option>
+                `);
+            });
+        })
+    });
+
+    $('form#book-form-id').submit(function (e) {
+        e.preventDefault();
+        var $form = $(this), url = $form.attr('action');
+        var data = {
+            title: $('#title-input-id').val(),
+            author: {authorName: $('#author-input-id').val()},
+            genreName: $('#genre-input-id').val()
+        };
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json'
+        }).done(window.location = "/books");
+    });
+
+</script>
+
+</body>
+</html>
